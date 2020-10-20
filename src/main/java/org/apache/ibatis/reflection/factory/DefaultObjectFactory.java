@@ -34,17 +34,18 @@ import org.apache.ibatis.reflection.ReflectionException;
 import org.apache.ibatis.reflection.Reflector;
 
 /**
+ * 默认的对象工厂
  * @author Clinton Begin
  */
 public class DefaultObjectFactory implements ObjectFactory, Serializable {
-
+  //序列化版本号
   private static final long serialVersionUID = -8855120656740914948L;
-
+  //根据类型创建
   @Override
   public <T> T create(Class<T> type) {
     return create(type, null, null);
   }
-
+  //根据类型和构造器类型和构造参数创建
   @SuppressWarnings("unchecked")
   @Override
   public <T> T create(Class<T> type, List<Class<?>> constructorArgTypes, List<Object> constructorArgs) {
@@ -52,7 +53,7 @@ public class DefaultObjectFactory implements ObjectFactory, Serializable {
     // we know types are assignable
     return (T) instantiateClass(classToCreate, constructorArgTypes, constructorArgs);
   }
-
+  //具体的类的构造过程
   private  <T> T instantiateClass(Class<T> type, List<Class<?>> constructorArgTypes, List<Object> constructorArgs) {
     try {
       Constructor<T> constructor;
@@ -88,7 +89,7 @@ public class DefaultObjectFactory implements ObjectFactory, Serializable {
       throw new ReflectionException("Error instantiating " + type + " with invalid types (" + argTypes + ") or values (" + argValues + "). Cause: " + e, e);
     }
   }
-
+  //根据类型解析接口
   protected Class<?> resolveInterface(Class<?> type) {
     Class<?> classToCreate;
     if (type == List.class || type == Collection.class || type == Iterable.class) {
@@ -104,7 +105,7 @@ public class DefaultObjectFactory implements ObjectFactory, Serializable {
     }
     return classToCreate;
   }
-
+  //判断是否是集合
   @Override
   public <T> boolean isCollection(Class<T> type) {
     return Collection.class.isAssignableFrom(type);

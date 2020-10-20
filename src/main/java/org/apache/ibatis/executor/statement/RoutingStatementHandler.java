@@ -30,22 +30,26 @@ import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.session.RowBounds;
 
 /**
+ * 路由会话处理器
  * @author Clinton Begin
  */
 public class RoutingStatementHandler implements StatementHandler {
-
+  //会话处理器
   private final StatementHandler delegate;
 
   public RoutingStatementHandler(Executor executor, MappedStatement ms, Object parameter, RowBounds rowBounds, ResultHandler resultHandler, BoundSql boundSql) {
 
     switch (ms.getStatementType()) {
+      //会话操作
       case STATEMENT:
         delegate = new SimpleStatementHandler(executor, ms, parameter, rowBounds, resultHandler, boundSql);
         break;
+        //预会话操作
       case PREPARED:
         delegate = new PreparedStatementHandler(executor, ms, parameter, rowBounds, resultHandler, boundSql);
         break;
       case CALLABLE:
+        //回调会话操作
         delegate = new CallableStatementHandler(executor, ms, parameter, rowBounds, resultHandler, boundSql);
         break;
       default:
@@ -53,42 +57,42 @@ public class RoutingStatementHandler implements StatementHandler {
     }
 
   }
-
+  //准备
   @Override
   public Statement prepare(Connection connection, Integer transactionTimeout) throws SQLException {
     return delegate.prepare(connection, transactionTimeout);
   }
-
+  //参数化
   @Override
   public void parameterize(Statement statement) throws SQLException {
     delegate.parameterize(statement);
   }
-
+  //执行
   @Override
   public void batch(Statement statement) throws SQLException {
     delegate.batch(statement);
   }
-
+  //更新
   @Override
   public int update(Statement statement) throws SQLException {
     return delegate.update(statement);
   }
-
+  //查询
   @Override
   public <E> List<E> query(Statement statement, ResultHandler resultHandler) throws SQLException {
     return delegate.query(statement, resultHandler);
   }
-
+  //查询游标
   @Override
   public <E> Cursor<E> queryCursor(Statement statement) throws SQLException {
     return delegate.queryCursor(statement);
   }
-
+  //执行sql
   @Override
   public BoundSql getBoundSql() {
     return delegate.getBoundSql();
   }
-
+  //获取参数处理器
   @Override
   public ParameterHandler getParameterHandler() {
     return delegate.getParameterHandler();

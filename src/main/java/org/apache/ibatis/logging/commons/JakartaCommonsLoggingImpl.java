@@ -19,46 +19,47 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 /**
+ * 公共日志实现类
  * @author Clinton Begin
  */
 public class JakartaCommonsLoggingImpl implements org.apache.ibatis.logging.Log {
-
+  //日志接口
   private final Log log;
-
+  //根据类名赋值日志接口实现
   public JakartaCommonsLoggingImpl(String clazz) {
     log = LogFactory.getLog(clazz);
   }
-
+  //是否开启debug模式
   @Override
   public boolean isDebugEnabled() {
     return log.isDebugEnabled();
   }
-
+  //是否开启trace模式
   @Override
   public boolean isTraceEnabled() {
     return log.isTraceEnabled();
   }
-
+  //错误输出信息
   @Override
   public void error(String s, Throwable e) {
     log.error(s, e);
   }
-
+  //错误输出
   @Override
   public void error(String s) {
     log.error(s);
   }
-
+  //debug输出
   @Override
   public void debug(String s) {
     log.debug(s);
   }
-
+  //trace输出
   @Override
   public void trace(String s) {
     log.trace(s);
   }
-
+  //warn 输出
   @Override
   public void warn(String s) {
     log.warn(s);

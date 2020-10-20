@@ -34,10 +34,11 @@ import java.util.Calendar;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
+ * 数组类型处理器
  * @author Clinton Begin
  */
 public class ArrayTypeHandler extends BaseTypeHandler<Object> {
-
+//  初始化标准的映射容器
   private static final ConcurrentHashMap<Class<?>, String> STANDARD_MAPPING;
   static {
     STANDARD_MAPPING = new ConcurrentHashMap<>();
@@ -75,6 +76,14 @@ public class ArrayTypeHandler extends BaseTypeHandler<Object> {
     super();
   }
 
+  /**
+   * 设置非空参数
+   * @param ps
+   * @param i
+   * @param parameter
+   * @param jdbcType
+   * @throws SQLException
+   */
   @Override
   public void setNonNullParameter(PreparedStatement ps, int i, Object parameter, JdbcType jdbcType)
       throws SQLException {
@@ -91,29 +100,62 @@ public class ArrayTypeHandler extends BaseTypeHandler<Object> {
       String arrayTypeName = resolveTypeName(componentType);
       Array array = ps.getConnection().createArrayOf(arrayTypeName, (Object[]) parameter);
       ps.setArray(i, array);
+      //该方法主要是释放array数据库返回的结果
       array.free();
     }
   }
 
+  /**
+   * 解析类型名称
+   * @param type
+   * @return
+   */
   protected String resolveTypeName(Class<?> type) {
     return STANDARD_MAPPING.getOrDefault(type, JdbcType.JAVA_OBJECT.name());
   }
 
+  /**
+   * 获取可空结果
+   * @param rs
+   * @param columnName Colunm name, when configuration <code>useColumnLabel</code> is <code>false</code>
+   * @return
+   * @throws SQLException
+   */
   @Override
   public Object getNullableResult(ResultSet rs, String columnName) throws SQLException {
     return extractArray(rs.getArray(columnName));
   }
 
+  /**
+   * 获取可空结果
+   * @param rs
+   * @param columnIndex
+   * @return
+   * @throws SQLException
+   */
   @Override
   public Object getNullableResult(ResultSet rs, int columnIndex) throws SQLException {
     return extractArray(rs.getArray(columnIndex));
   }
 
+  /**
+   * 获取可空结果
+   * @param cs
+   * @param columnIndex
+   * @return
+   * @throws SQLException
+   */
   @Override
   public Object getNullableResult(CallableStatement cs, int columnIndex) throws SQLException {
     return extractArray(cs.getArray(columnIndex));
   }
 
+  /**
+   * 提取数组内容
+   * @param array
+   * @return
+   * @throws SQLException
+   */
   protected Object extractArray(Array array) throws SQLException {
     if (array == null) {
       return null;

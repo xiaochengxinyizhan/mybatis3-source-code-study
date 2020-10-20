@@ -24,8 +24,9 @@ import java.util.stream.Collectors;
 import org.apache.ibatis.builder.BuilderException;
 
 /**
+ * 解析SQL服务方法代理SQL服务类的接口
  * The interface that resolve an SQL provider method via an SQL provider class.
- *
+ * 这个接口需要实现在一个SQL服务类 和她需要定义默认的构造器创建实例
  * <p> This interface need to implements at an SQL provider class and
  * it need to define the default constructor for creating a new instance.
  *
@@ -35,6 +36,7 @@ import org.apache.ibatis.builder.BuilderException;
 public interface ProviderMethodResolver {
 
   /**
+   * 解析SQL服务的方法
    * Resolve an SQL provider method.
    *
    * <p> The default implementation return a method that matches following conditions.

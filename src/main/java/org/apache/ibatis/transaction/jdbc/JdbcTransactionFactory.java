@@ -24,6 +24,7 @@ import org.apache.ibatis.transaction.Transaction;
 import org.apache.ibatis.transaction.TransactionFactory;
 
 /**
+ * 创建jdbc事务实例
  * Creates {@link JdbcTransaction} instances.
  *
  * @author Clinton Begin
@@ -31,12 +32,14 @@ import org.apache.ibatis.transaction.TransactionFactory;
  * @see JdbcTransaction
  */
 public class JdbcTransactionFactory implements TransactionFactory {
+  // TODO: 2020/3/10 这里没实现setProperties是因为默认的是接口的实现
 
+  //根据链接创建事务
   @Override
   public Transaction newTransaction(Connection conn) {
     return new JdbcTransaction(conn);
   }
-
+  //根据数据源实现
   @Override
   public Transaction newTransaction(DataSource ds, TransactionIsolationLevel level, boolean autoCommit) {
     return new JdbcTransaction(ds, level, autoCommit);

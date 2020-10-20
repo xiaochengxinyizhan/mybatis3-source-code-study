@@ -26,6 +26,7 @@ import org.apache.ibatis.logging.Log;
 import org.apache.ibatis.reflection.ExceptionUtil;
 
 /**
+ * 添加日志的链接代理
  * Connection proxy to add logging.
  *
  * @author Clinton Begin
@@ -33,28 +34,34 @@ import org.apache.ibatis.reflection.ExceptionUtil;
  *
  */
 public final class ConnectionLogger extends BaseJdbcLogger implements InvocationHandler {
-
+  //链接
   private final Connection connection;
-
+  //类构造器
   private ConnectionLogger(Connection conn, Log statementLog, int queryStack) {
     super(statementLog, queryStack);
     this.connection = conn;
   }
-
+  //实现动态代理模式的invoke，也就是说链接只支持这几种模式，否则直接报错
   @Override
   public Object invoke(Object proxy, Method method, Object[] params)
       throws Throwable {
     try {
+      //如果传入的类是Object类就直接执行
       if (Object.class.equals(method.getDeclaringClass())) {
         return method.invoke(this, params);
       }
+      //如果是预会话的方法
       if ("prepareStatement".equals(method.getName())) {
+        //判断是否开启debug方法
         if (isDebugEnabled()) {
           debug(" Preparing: " + removeBreakingWhitespace((String) params[0]), true);
         }
+        //预会话执行链接
         PreparedStatement stmt = (PreparedStatement) method.invoke(connection, params);
+        //执行预会话日志实例输出
         stmt = PreparedStatementLogger.newInstance(stmt, statementLog, queryStack);
         return stmt;
+        //如果是准备会话则按照会话方法执行
       } else if ("prepareCall".equals(method.getName())) {
         if (isDebugEnabled()) {
           debug(" Preparing: " + removeBreakingWhitespace((String) params[0]), true);
@@ -62,10 +69,12 @@ public final class ConnectionLogger extends BaseJdbcLogger implements Invocation
         PreparedStatement stmt = (PreparedStatement) method.invoke(connection, params);
         stmt = PreparedStatementLogger.newInstance(stmt, statementLog, queryStack);
         return stmt;
+        //如果是创建会话则创建会话执行
       } else if ("createStatement".equals(method.getName())) {
         Statement stmt = (Statement) method.invoke(connection, params);
         stmt = StatementLogger.newInstance(stmt, statementLog, queryStack);
         return stmt;
+        //其余则直接执行
       } else {
         return method.invoke(connection, params);
       }
@@ -75,6 +84,7 @@ public final class ConnectionLogger extends BaseJdbcLogger implements Invocation
   }
 
   /**
+   * 创建一个链接日志的版本
    * Creates a logging version of a connection.
    *
    * @param conn - the original connection
@@ -87,6 +97,7 @@ public final class ConnectionLogger extends BaseJdbcLogger implements Invocation
   }
 
   /**
+   * 返回封装的链接--这个链接带有日志，将会话链接与日志绑定
    * return the wrapped connection.
    *
    * @return the connection

@@ -18,24 +18,25 @@ package org.apache.ibatis.plugin;
 import org.apache.ibatis.exceptions.PersistenceException;
 
 /**
+ * 插件异常
  * @author Clinton Begin
  */
 public class PluginException extends PersistenceException {
 
   private static final long serialVersionUID = 8548771664564998595L;
-
+  //空构造函数
   public PluginException() {
     super();
   }
-
+  //传递信息的构造函数
   public PluginException(String message) {
     super(message);
   }
-
+  //传递信息和throwable的构造函数
   public PluginException(String message, Throwable cause) {
     super(message, cause);
   }
-
+  //传递throwable的构造函数
   public PluginException(Throwable cause) {
     super(cause);
   }

@@ -17,46 +17,46 @@ package org.apache.ibatis.logging.stdout;
 
 import org.apache.ibatis.logging.Log;
 
-/**
+/**标准输出实现类
  * @author Clinton Begin
  */
 public class StdOutImpl implements Log {
-
+  //空构造器
   public StdOutImpl(String clazz) {
     // Do Nothing
   }
-
+ //是否开启debug
   @Override
   public boolean isDebugEnabled() {
     return true;
   }
-
+  //是否开启trace
   @Override
   public boolean isTraceEnabled() {
     return true;
   }
-
+  //输出错误信息，系统输出和栈溢出
   @Override
   public void error(String s, Throwable e) {
     System.err.println(s);
     e.printStackTrace(System.err);
   }
-
+  //错误信息输出
   @Override
   public void error(String s) {
     System.err.println(s);
   }
-
+  //输出debug
   @Override
   public void debug(String s) {
     System.out.println(s);
   }
-
+  //输出trace
   @Override
   public void trace(String s) {
     System.out.println(s);
   }
-
+  //输出warn
   @Override
   public void warn(String s) {
     System.out.println(s);

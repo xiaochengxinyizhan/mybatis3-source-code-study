@@ -34,25 +34,28 @@ import org.apache.ibatis.scripting.LanguageDriver;
 import org.apache.ibatis.session.Configuration;
 
 /**
+ * xml会话构建器
  * @author Clinton Begin
  */
 public class XMLStatementBuilder extends BaseBuilder {
-
+   //mapper接口构建器助手
   private final MapperBuilderAssistant builderAssistant;
+  //上下文
   private final XNode context;
+  //要求的数据库ID
   private final String requiredDatabaseId;
-
+  //构造函数
   public XMLStatementBuilder(Configuration configuration, MapperBuilderAssistant builderAssistant, XNode context) {
     this(configuration, builderAssistant, context, null);
   }
-
+  //构造函数
   public XMLStatementBuilder(Configuration configuration, MapperBuilderAssistant builderAssistant, XNode context, String databaseId) {
     super(configuration);
     this.builderAssistant = builderAssistant;
     this.context = context;
     this.requiredDatabaseId = databaseId;
   }
-
+  //解析会话节点
   public void parseStatementNode() {
     String id = context.getStringAttribute("id");
     String databaseId = context.getStringAttribute("databaseId");
@@ -115,7 +118,7 @@ public class XMLStatementBuilder extends BaseBuilder {
         resultSetTypeEnum, flushCache, useCache, resultOrdered,
         keyGenerator, keyProperty, keyColumn, databaseId, langDriver, resultSets);
   }
-
+   //执行selectKey节点
   private void processSelectKeyNodes(String id, Class<?> parameterTypeClass, LanguageDriver langDriver) {
     List<XNode> selectKeyNodes = context.evalNodes("selectKey");
     if (configuration.getDatabaseId() != null) {
@@ -124,7 +127,7 @@ public class XMLStatementBuilder extends BaseBuilder {
     parseSelectKeyNodes(id, selectKeyNodes, parameterTypeClass, langDriver, null);
     removeSelectKeyNodes(selectKeyNodes);
   }
-
+   //解析selectKey节点
   private void parseSelectKeyNodes(String parentId, List<XNode> list, Class<?> parameterTypeClass, LanguageDriver langDriver, String skRequiredDatabaseId) {
     for (XNode nodeToHandle : list) {
       String id = parentId + SelectKeyGenerator.SELECT_KEY_SUFFIX;
@@ -134,7 +137,7 @@ public class XMLStatementBuilder extends BaseBuilder {
       }
     }
   }
-
+   //解析selectKey节点
   private void parseSelectKeyNode(String id, XNode nodeToHandle, Class<?> parameterTypeClass, LanguageDriver langDriver, String databaseId) {
     String resultType = nodeToHandle.getStringAttribute("resultType");
     Class<?> resultTypeClass = resolveClass(resultType);
@@ -167,13 +170,13 @@ public class XMLStatementBuilder extends BaseBuilder {
     MappedStatement keyStatement = configuration.getMappedStatement(id, false);
     configuration.addKeyGenerator(id, new SelectKeyGenerator(keyStatement, executeBefore));
   }
-
+  //移除selectKey节点
   private void removeSelectKeyNodes(List<XNode> selectKeyNodes) {
     for (XNode nodeToHandle : selectKeyNodes) {
       nodeToHandle.getParent().getNode().removeChild(nodeToHandle.getNode());
     }
   }
-
+  //数据库ID匹配当前ID
   private boolean databaseIdMatchesCurrent(String id, String databaseId, String requiredDatabaseId) {
     if (requiredDatabaseId != null) {
       return requiredDatabaseId.equals(databaseId);
@@ -189,7 +192,7 @@ public class XMLStatementBuilder extends BaseBuilder {
     MappedStatement previous = this.configuration.getMappedStatement(id, false); // issue #2
     return previous.getDatabaseId() == null;
   }
-
+  //获取语言驱动
   private LanguageDriver getLanguageDriver(String lang) {
     Class<? extends LanguageDriver> langClass = null;
     if (lang != null) {

@@ -33,14 +33,15 @@ import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.session.RowBounds;
 
 /**
+ * 预会话处理器
  * @author Clinton Begin
  */
 public class PreparedStatementHandler extends BaseStatementHandler {
-
+  //构造函数
   public PreparedStatementHandler(Executor executor, MappedStatement mappedStatement, Object parameter, RowBounds rowBounds, ResultHandler resultHandler, BoundSql boundSql) {
     super(executor, mappedStatement, parameter, rowBounds, resultHandler, boundSql);
   }
-
+  //更新
   @Override
   public int update(Statement statement) throws SQLException {
     PreparedStatement ps = (PreparedStatement) statement;
@@ -51,27 +52,27 @@ public class PreparedStatementHandler extends BaseStatementHandler {
     keyGenerator.processAfter(executor, mappedStatement, ps, parameterObject);
     return rows;
   }
-
+  //批量执行
   @Override
   public void batch(Statement statement) throws SQLException {
     PreparedStatement ps = (PreparedStatement) statement;
     ps.addBatch();
   }
-
+  //查询
   @Override
   public <E> List<E> query(Statement statement, ResultHandler resultHandler) throws SQLException {
     PreparedStatement ps = (PreparedStatement) statement;
     ps.execute();
     return resultSetHandler.handleResultSets(ps);
   }
-
+  //查询游标集
   @Override
   public <E> Cursor<E> queryCursor(Statement statement) throws SQLException {
     PreparedStatement ps = (PreparedStatement) statement;
     ps.execute();
     return resultSetHandler.handleCursorResultSets(ps);
   }
-
+  //实例话会话
   @Override
   protected Statement instantiateStatement(Connection connection) throws SQLException {
     String sql = boundSql.getSql();
@@ -88,7 +89,7 @@ public class PreparedStatementHandler extends BaseStatementHandler {
       return connection.prepareStatement(sql, mappedStatement.getResultSetType().getValue(), ResultSet.CONCUR_READ_ONLY);
     }
   }
-
+  //参数化会话
   @Override
   public void parameterize(Statement statement) throws SQLException {
     parameterHandler.setParameters((PreparedStatement) statement);

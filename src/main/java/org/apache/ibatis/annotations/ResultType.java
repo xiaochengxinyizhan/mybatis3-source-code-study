@@ -22,6 +22,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * 当@Select方法使用结果处理器的时候，这个注解可以被使用。那些方法一定有不需要返回的类型，因此这个注解可以用来告诉mybatis每行的对象应该是构建成什么样子
  * This annotation can be used when a @Select method is using a
  * ResultHandler.  Those methods must have void return type, so
  * this annotation can be used to tell MyBatis what kind of object
@@ -44,6 +45,7 @@ import java.lang.annotation.Target;
 @Target(ElementType.METHOD)
 public @interface ResultType {
   /**
+   * 返回返回类型
    * Returns the return type.
    *
    * @return the return type

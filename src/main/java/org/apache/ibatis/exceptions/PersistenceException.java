@@ -16,25 +16,26 @@
 package org.apache.ibatis.exceptions;
 
 /**
+ * 用于抑制编译废弃的IbatisException提醒
  * @author Clinton Begin
  */
 @SuppressWarnings("deprecation")
 public class PersistenceException extends IbatisException {
 
   private static final long serialVersionUID = -7537395265357977271L;
-
+  //重载空构造函数
   public PersistenceException() {
     super();
   }
-
+ //重载传递消息的构造函数
   public PersistenceException(String message) {
     super(message);
   }
-
+  //重载传递消息和Throwable的构造函数
   public PersistenceException(String message, Throwable cause) {
     super(message, cause);
   }
-
+  //重载Throwable的构造函数
   public PersistenceException(Throwable cause) {
     super(cause);
   }

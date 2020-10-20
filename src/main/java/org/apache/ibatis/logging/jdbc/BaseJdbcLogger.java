@@ -33,25 +33,30 @@ import org.apache.ibatis.logging.Log;
 import org.apache.ibatis.reflection.ArrayUtil;
 
 /**
+ * 日志输出的代理基础类
  * Base class for proxies to do logging.
  *
  * @author Clinton Begin
  * @author Eduardo Macarron
  */
 public abstract class BaseJdbcLogger {
-
+  //设置方法集合
   protected static final Set<String> SET_METHODS;
+  //执行方法集合
   protected static final Set<String> EXECUTE_METHODS = new HashSet<>();
-
+  //列字段集合
   private final Map<Object, Object> columnMap = new HashMap<>();
-
+  //列名集合
   private final List<Object> columnNames = new ArrayList<>();
+  //列值集合
   private final List<Object> columnValues = new ArrayList<>();
-
+  //会话日志接口
   protected final Log statementLog;
+  //查询栈
   protected final int queryStack;
 
   /*
+  默认的构造器
    * Default constructor
    */
   public BaseJdbcLogger(Log log, int queryStack) {
@@ -62,30 +67,30 @@ public abstract class BaseJdbcLogger {
       this.queryStack = queryStack;
     }
   }
-
+  //静态代码块，将所有的声明的set方法并且参数个数大于1的放入set方法集合
   static {
     SET_METHODS = Arrays.stream(PreparedStatement.class.getDeclaredMethods())
             .filter(method -> method.getName().startsWith("set"))
             .filter(method -> method.getParameterCount() > 1)
             .map(Method::getName)
             .collect(Collectors.toSet());
-
+    //执行方法添加 四种类型方法名称
     EXECUTE_METHODS.add("execute");
     EXECUTE_METHODS.add("executeUpdate");
     EXECUTE_METHODS.add("executeQuery");
     EXECUTE_METHODS.add("addBatch");
   }
-
+  //设置列的字段
   protected void setColumn(Object key, Object value) {
     columnMap.put(key, value);
     columnNames.add(key);
     columnValues.add(value);
   }
-
+  //根据某个key获取列对象
   protected Object getColumn(Object key) {
     return columnMap.get(key);
   }
-
+  //获取参数值
   protected String getParameterValueString() {
     List<Object> typeList = new ArrayList<>(columnValues.size());
     for (Object value : columnValues) {
@@ -98,7 +103,7 @@ public abstract class BaseJdbcLogger {
     final String parameters = typeList.toString();
     return parameters.substring(1, parameters.length() - 1);
   }
-
+  //对象或者数组对象转string
   protected String objectValueString(Object value) {
     if (value instanceof Array) {
       try {
@@ -109,17 +114,17 @@ public abstract class BaseJdbcLogger {
     }
     return value.toString();
   }
-
+  //获取列名字
   protected String getColumnString() {
     return columnNames.toString();
   }
-
+  //清除列信息
   protected void clearColumnInfo() {
     columnMap.clear();
     columnNames.clear();
     columnValues.clear();
   }
-
+  //移除空格
   protected String removeBreakingWhitespace(String original) {
     StringTokenizer whitespaceStripper = new StringTokenizer(original);
     StringBuilder builder = new StringBuilder();
@@ -129,27 +134,29 @@ public abstract class BaseJdbcLogger {
     }
     return builder.toString();
   }
-
+  //是否开启debug
   protected boolean isDebugEnabled() {
     return statementLog.isDebugEnabled();
   }
-
+  //是否开启trace
   protected boolean isTraceEnabled() {
     return statementLog.isTraceEnabled();
   }
-
+  //是否输入，来输出信息
   protected void debug(String text, boolean input) {
     if (statementLog.isDebugEnabled()) {
       statementLog.debug(prefix(input) + text);
     }
   }
-
+  //根据是否输入来输出信息
   protected void trace(String text, boolean input) {
     if (statementLog.isTraceEnabled()) {
       statementLog.trace(prefix(input) + text);
     }
   }
 
+  // TODO: 2020/3/14 没能想到这个前缀是干啥的
+  //判断前缀
   private String prefix(boolean isInput) {
     char[] buffer = new char[queryStack * 2 + 2];
     Arrays.fill(buffer, '=');

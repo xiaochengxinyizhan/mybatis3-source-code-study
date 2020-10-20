@@ -19,6 +19,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 /**
+ *  {@link java.sql.Statement}工具类 3。4。0版本以后
  * Utility for {@link java.sql.Statement}.
  *
  * @since 3.4.0
@@ -31,6 +32,7 @@ public class StatementUtil {
   }
 
   /**
+   * 应用事务超时
    * Apply a transaction timeout.
    * <p>
    * Update a query timeout to apply a transaction timeout.

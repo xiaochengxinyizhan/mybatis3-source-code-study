@@ -42,10 +42,7 @@ import org.apache.ibatis.domain.blog.ImmutableAuthor;
 import org.apache.ibatis.domain.blog.Post;
 import org.apache.ibatis.domain.blog.Section;
 import org.apache.ibatis.domain.blog.Tag;
-import org.apache.ibatis.domain.blog.mappers.AuthorMapper;
-import org.apache.ibatis.domain.blog.mappers.AuthorMapperWithMultipleHandlers;
-import org.apache.ibatis.domain.blog.mappers.AuthorMapperWithRowBounds;
-import org.apache.ibatis.domain.blog.mappers.BlogMapper;
+import org.apache.ibatis.domain.blog.mappers.*;
 import org.apache.ibatis.exceptions.TooManyResultsException;
 import org.apache.ibatis.executor.result.DefaultResultHandler;
 import org.apache.ibatis.io.Resources;
@@ -589,6 +586,58 @@ class SqlSessionTest extends BaseDataTest {
     }
   }
 
+  // TODO: 2020/3/28
+  //  English-> #{param}, how work in Mybatis,
+  //  Chinese-> Mybatis中#{param}是如何工作的
+  @Test
+  void xcxyzStudySourceCode_SelectOneAuthorUsingMapperClassWithId() {
+
+    //获取全局核心配置类
+    Configuration configuration = new Configuration(sqlMapper.getConfiguration().getEnvironment());
+    //为全局配置添加需要的Mapper接口
+    configuration.addMapper(AuthorMapperWithAnnotation.class);
+    //创建SQL会话工厂
+    SqlSessionFactory sqlMapperWithAnnotation = new DefaultSqlSessionFactory(configuration);
+    //获取SQL会话
+    SqlSession sqlSession =  sqlMapperWithAnnotation.openSession();
+    //从会话中获取绑定好的mapper接口信息
+    AuthorMapperWithAnnotation mapper = sqlSession.getMapper(AuthorMapperWithAnnotation.class);
+    //执行插入会话
+    Author expected = new Author(500, "wolf：\"test\"", "******", "liuxiaocheng@somewhere.com", "Something...", null);
+    mapper.insertAuthorWithPlaceholder(expected);
+//    System.out.println("selectAuthorWithPlaceholder->"+mapper.selectAuthorWithPlaceholder(expected).toString());
+//    System.out.println("selectAuthorWithPlaceholderWei->"+mapper.selectAuthorWithPlaceholderWei(500).toString());
+//    System.out.println("selectAuthorWithPlaceholderDollar->"+mapper.selectAuthorWithPlaceholderDollar(expected).toString());
+//    System.out.println("selectAuthorWithPlaceholderParam->"+mapper.selectAuthorWithPlaceholderParam(expected).toString());
+
+
+//    Author one = mapper.selectAuthorWithPlaceholder(expected);
+//    System.out.println("insertAuthorWithPlaceholder->selectAuthorWithPlaceholder->req:【"+expected.toString()+"】resp->【"+one.toString()+"】");
+//    mapper.deleteAuthor(expected);
+//    Author two =mapper.selectAuthorWithPlaceholder(expected);
+//    System.out.println("deleteAuthor->selectAuthorWithPlaceholder->req:【"+expected.toString()+"】resp->【"+two+"】");
+//    mapper.insertAuthor(expected);
+//    Author three =mapper.selectAuthorWithPlaceholder(expected);
+//    System.out.println("insertAuthor->selectAuthorWithPlaceholder->req:【"+expected.toString()+"】resp->【"+three.toString()+"】");
+//    expected.setUsername("update_1_wolf");
+//    mapper.updateAuthor(expected);
+//    Author four =mapper.selectAuthorWithPlaceholder(expected);
+//    System.out.println("updateAuthor->selectAuthorWithPlaceholder->req:【"+expected.toString()+"】resp->【"+four.toString()+"】");
+//    expected.setUsername("update_2_wolf");
+//    mapper.updateAuthorWithPlaceholder(expected);
+//    Author five =mapper.selectAuthorWithPlaceholder(expected);
+//    System.out.println("updateAuthorWithPlaceholder->selectAuthorWithPlaceholder->req:【"+expected.toString()+"】resp->【"+five.toString()+"】");
+//    mapper.deleteAuthorWithPlaceholder(expected);
+//    Author six =mapper.selectAuthorWithPlaceholder(expected);
+//    System.out.println("deleteAuthorWithPlaceholder->selectAuthorWithPlaceholder->req:【"+expected.toString()+"】resp->【"+six+"】");
+
+ //mapper.insertAuthor(expected);
+    //执行mapper接口的实现方法
+//    Author author = mapper.selectAuthorInfoById(500);
+//    //期待返回正确的数据
+//    assertEquals(500,author.getId());
+  }
+
   @Test
   void shouldFailSelectOneAuthorUsingMapperClassWithTwoRowBounds() {
     Configuration configuration = new Configuration(sqlMapper.getConfiguration().getEnvironment());
@@ -606,7 +655,7 @@ class SqlSessionTest extends BaseDataTest {
   void shouldInsertAuthorUsingMapperClass() {
     try (SqlSession session = sqlMapper.openSession()) {
       AuthorMapper mapper = session.getMapper(AuthorMapper.class);
-      Author expected = new Author(500, "cbegin", "******", "cbegin@somewhere.com", "Something...", null);
+      Author expected = new Author(500, "wolf：\"test\"", "******", "cbegin@somewhere.com", "Something...", null);
       mapper.insertAuthor(expected);
       Author actual = mapper.selectAuthor(500);
       assertNotNull(actual);

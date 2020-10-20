@@ -20,13 +20,17 @@ import javax.sql.DataSource;
 import org.apache.ibatis.transaction.TransactionFactory;
 
 /**
+ * 全局环境
  * @author Clinton Begin
  */
 public final class Environment {
+  //id
   private final String id;
+  //事务工厂
   private final TransactionFactory transactionFactory;
+  //数据源
   private final DataSource dataSource;
-
+  //环境构造函数
   public Environment(String id, TransactionFactory transactionFactory, DataSource dataSource) {
     if (id == null) {
       throw new IllegalArgumentException("Parameter 'id' must not be null");
@@ -41,10 +45,13 @@ public final class Environment {
     this.transactionFactory = transactionFactory;
     this.dataSource = dataSource;
   }
-
+  //内部构建器
   public static class Builder {
+    //id
     private final String id;
+    //事务工厂
     private TransactionFactory transactionFactory;
+    //数据源
     private DataSource dataSource;
 
     public Builder(String id) {
@@ -64,13 +71,14 @@ public final class Environment {
     public String id() {
       return this.id;
     }
+    //构建器构建环境
 
     public Environment build() {
       return new Environment(this.id, this.transactionFactory, this.dataSource);
     }
 
   }
-
+  //get方法
   public String getId() {
     return this.id;
   }

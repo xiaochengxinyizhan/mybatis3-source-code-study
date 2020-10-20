@@ -36,14 +36,15 @@ import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.type.JdbcType;
 
 /**
+ * 回调会话处理器
  * @author Clinton Begin
  */
 public class CallableStatementHandler extends BaseStatementHandler {
-
+  //有参数构造器
   public CallableStatementHandler(Executor executor, MappedStatement mappedStatement, Object parameter, RowBounds rowBounds, ResultHandler resultHandler, BoundSql boundSql) {
     super(executor, mappedStatement, parameter, rowBounds, resultHandler, boundSql);
   }
-
+  //更新操作
   @Override
   public int update(Statement statement) throws SQLException {
     CallableStatement cs = (CallableStatement) statement;
@@ -55,13 +56,13 @@ public class CallableStatementHandler extends BaseStatementHandler {
     resultSetHandler.handleOutputParameters(cs);
     return rows;
   }
-
+  //执行批量操作
   @Override
   public void batch(Statement statement) throws SQLException {
     CallableStatement cs = (CallableStatement) statement;
     cs.addBatch();
   }
-
+  //查询
   @Override
   public <E> List<E> query(Statement statement, ResultHandler resultHandler) throws SQLException {
     CallableStatement cs = (CallableStatement) statement;
@@ -70,7 +71,7 @@ public class CallableStatementHandler extends BaseStatementHandler {
     resultSetHandler.handleOutputParameters(cs);
     return resultList;
   }
-
+  //查询游标集
   @Override
   public <E> Cursor<E> queryCursor(Statement statement) throws SQLException {
     CallableStatement cs = (CallableStatement) statement;
@@ -79,7 +80,7 @@ public class CallableStatementHandler extends BaseStatementHandler {
     resultSetHandler.handleOutputParameters(cs);
     return resultList;
   }
-
+  //实例话会话
   @Override
   protected Statement instantiateStatement(Connection connection) throws SQLException {
     String sql = boundSql.getSql();
@@ -89,13 +90,13 @@ public class CallableStatementHandler extends BaseStatementHandler {
       return connection.prepareCall(sql, mappedStatement.getResultSetType().getValue(), ResultSet.CONCUR_READ_ONLY);
     }
   }
-
+  //参数化会话
   @Override
   public void parameterize(Statement statement) throws SQLException {
     registerOutputParameters((CallableStatement) statement);
     parameterHandler.setParameters((CallableStatement) statement);
   }
-
+  //注册输出参数
   private void registerOutputParameters(CallableStatement cs) throws SQLException {
     List<ParameterMapping> parameterMappings = boundSql.getParameterMappings();
     for (int i = 0, n = parameterMappings.size(); i < n; i++) {

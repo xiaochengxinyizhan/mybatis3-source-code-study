@@ -24,6 +24,7 @@ import ognl.OgnlException;
 import org.apache.ibatis.builder.BuilderException;
 
 /**
+ * 缓存OGNL解析的表达式
  * Caches OGNL parsed expressions.
  *
  * @author Eduardo Macarron
@@ -31,9 +32,11 @@ import org.apache.ibatis.builder.BuilderException;
  * @see <a href='http://code.google.com/p/mybatis/issues/detail?id=342'>Issue 342</a>
  */
 public final class OgnlCache {
-
+   //成员访问
   private static final OgnlMemberAccess MEMBER_ACCESS = new OgnlMemberAccess();
+  //类解析
   private static final OgnlClassResolver CLASS_RESOLVER = new OgnlClassResolver();
+  //表达式缓存
   private static final Map<String, Object> expressionCache = new ConcurrentHashMap<>();
 
   private OgnlCache() {

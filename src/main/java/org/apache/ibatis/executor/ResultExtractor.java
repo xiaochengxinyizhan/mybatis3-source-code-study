@@ -23,27 +23,35 @@ import org.apache.ibatis.reflection.factory.ObjectFactory;
 import org.apache.ibatis.session.Configuration;
 
 /**
+ *
+ * 结果提取器
  * @author Andrew Gustafson
  */
 public class ResultExtractor {
+  //全局配置对象
   private final Configuration configuration;
+  //对象工厂
   private final ObjectFactory objectFactory;
-
+  //结果提取器构造器
   public ResultExtractor(Configuration configuration, ObjectFactory objectFactory) {
     this.configuration = configuration;
     this.objectFactory = objectFactory;
   }
-
+  //从List集合中提取对象
   public Object extractObjectFromList(List<Object> list, Class<?> targetType) {
     Object value = null;
+    //判断目标类型是否是本身
     if (targetType != null && targetType.isAssignableFrom(list.getClass())) {
       value = list;
+      //判断目标是不是集合
     } else if (targetType != null && objectFactory.isCollection(targetType)) {
       value = objectFactory.create(targetType);
       MetaObject metaObject = configuration.newMetaObject(value);
       metaObject.addAll(list);
+      //判断目标是不是数组
     } else if (targetType != null && targetType.isArray()) {
       Class<?> arrayComponentType = targetType.getComponentType();
+      //数组反射类构造实例
       Object array = Array.newInstance(arrayComponentType, list.size());
       if (arrayComponentType.isPrimitive()) {
         for (int i = 0; i < list.size(); i++) {
@@ -53,6 +61,7 @@ public class ResultExtractor {
       } else {
         value = list.toArray((Object[])array);
       }
+      //只有一个对象返回，否则抛出异常
     } else {
       if (list != null && list.size() > 1) {
         throw new ExecutorException("Statement returned more than one row, where no more than one was expected.");

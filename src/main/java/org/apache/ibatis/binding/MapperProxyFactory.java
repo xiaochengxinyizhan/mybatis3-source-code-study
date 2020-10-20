@@ -24,30 +24,32 @@ import org.apache.ibatis.binding.MapperProxy.MapperMethodInvoker;
 import org.apache.ibatis.session.SqlSession;
 
 /**
+ * Mapper代理工厂
  * @author Lasse Voss
  */
 public class MapperProxyFactory<T> {
-
+  //mapper接口
   private final Class<T> mapperInterface;
+  //方法缓存
   private final Map<Method, MapperMethodInvoker> methodCache = new ConcurrentHashMap<>();
-
+  //构造函数
   public MapperProxyFactory(Class<T> mapperInterface) {
     this.mapperInterface = mapperInterface;
   }
-
+  //获取mapper接口
   public Class<T> getMapperInterface() {
     return mapperInterface;
   }
-
+  //获取方法缓存
   public Map<Method, MapperMethodInvoker> getMethodCache() {
     return methodCache;
   }
-
+  //初始化代理实例
   @SuppressWarnings("unchecked")
   protected T newInstance(MapperProxy<T> mapperProxy) {
     return (T) Proxy.newProxyInstance(mapperInterface.getClassLoader(), new Class[] { mapperInterface }, mapperProxy);
   }
-
+  //初始化代理类
   public T newInstance(SqlSession sqlSession) {
     final MapperProxy<T> mapperProxy = new MapperProxy<>(sqlSession, mapperInterface, methodCache);
     return newInstance(mapperProxy);

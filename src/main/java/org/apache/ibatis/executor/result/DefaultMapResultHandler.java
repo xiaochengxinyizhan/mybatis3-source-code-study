@@ -25,16 +25,21 @@ import org.apache.ibatis.session.ResultContext;
 import org.apache.ibatis.session.ResultHandler;
 
 /**
+ * 默认Map结果处理器
  * @author Clinton Begin
  */
 public class DefaultMapResultHandler<K, V> implements ResultHandler<V> {
-
+  //映射结果
   private final Map<K, V> mappedResults;
+  //映射key
   private final String mapKey;
+  //对象工厂
   private final ObjectFactory objectFactory;
+  //对象包装器工厂
   private final ObjectWrapperFactory objectWrapperFactory;
+  //反射工厂
   private final ReflectorFactory reflectorFactory;
-
+  //有参数构造函数
   @SuppressWarnings("unchecked")
   public DefaultMapResultHandler(String mapKey, ObjectFactory objectFactory, ObjectWrapperFactory objectWrapperFactory, ReflectorFactory reflectorFactory) {
     this.objectFactory = objectFactory;
@@ -43,7 +48,7 @@ public class DefaultMapResultHandler<K, V> implements ResultHandler<V> {
     this.mappedResults = objectFactory.create(Map.class);
     this.mapKey = mapKey;
   }
-
+  //处理结果
   @Override
   public void handleResult(ResultContext<? extends V> context) {
     final V value = context.getResultObject();
@@ -52,7 +57,7 @@ public class DefaultMapResultHandler<K, V> implements ResultHandler<V> {
     final K key = (K) mo.getValue(mapKey);
     mappedResults.put(key, value);
   }
-
+  //获取映射结果
   public Map<K, V> getMappedResults() {
     return mappedResults;
   }

@@ -18,24 +18,25 @@ package org.apache.ibatis.cache;
 import org.apache.ibatis.exceptions.PersistenceException;
 
 /**
+ * 缓存异常
  * @author Clinton Begin
  */
 public class CacheException extends PersistenceException {
 
   private static final long serialVersionUID = -193202262468464650L;
-
+  //空构造函数
   public CacheException() {
     super();
   }
-
+  //传递信息的构造函数
   public CacheException(String message) {
     super(message);
   }
-
+  //传递信息和throwable的构造函数
   public CacheException(String message, Throwable cause) {
     super(message, cause);
   }
-
+  //传递throwable的构造函数
   public CacheException(Throwable cause) {
     super(cause);
   }

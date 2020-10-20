@@ -25,22 +25,27 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 /**
+ * mybatis DTDs 线下实体解析
  * Offline entity resolver for the MyBatis DTDs.
  *
  * @author Clinton Begin
  * @author Eduardo Macarron
  */
 public class XMLMapperEntityResolver implements EntityResolver {
-
+  //ibatis-3-config.dtd
   private static final String IBATIS_CONFIG_SYSTEM = "ibatis-3-config.dtd";
+  //ibatis-3-mapper.dtd
   private static final String IBATIS_MAPPER_SYSTEM = "ibatis-3-mapper.dtd";
+  //mybatis-3-config.dtd
   private static final String MYBATIS_CONFIG_SYSTEM = "mybatis-3-config.dtd";
+  //mybatis-3-mapper.dtd
   private static final String MYBATIS_MAPPER_SYSTEM = "mybatis-3-mapper.dtd";
-
+  //协议
   private static final String MYBATIS_CONFIG_DTD = "org/apache/ibatis/builder/xml/mybatis-3-config.dtd";
   private static final String MYBATIS_MAPPER_DTD = "org/apache/ibatis/builder/xml/mybatis-3-mapper.dtd";
 
   /**
+   * 转换一个公共的DTD成本地的
    * Converts a public DTD into a local one.
    *
    * @param publicId The public id that is what comes after "PUBLIC"
@@ -65,7 +70,7 @@ public class XMLMapperEntityResolver implements EntityResolver {
       throw new SAXException(e.toString());
     }
   }
-
+  //获取输入源
   private InputSource getInputSource(String path, String publicId, String systemId) {
     InputSource source = null;
     if (path != null) {

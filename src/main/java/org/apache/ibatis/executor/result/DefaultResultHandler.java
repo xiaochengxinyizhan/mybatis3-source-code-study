@@ -23,26 +23,27 @@ import org.apache.ibatis.session.ResultContext;
 import org.apache.ibatis.session.ResultHandler;
 
 /**
+ * 默认结果处理器
  * @author Clinton Begin
  */
 public class DefaultResultHandler implements ResultHandler<Object> {
-
+  //集合
   private final List<Object> list;
-
+  //空构造函数
   public DefaultResultHandler() {
     list = new ArrayList<>();
   }
-
+  //有参构造函数
   @SuppressWarnings("unchecked")
   public DefaultResultHandler(ObjectFactory objectFactory) {
     list = objectFactory.create(List.class);
   }
-
+  //处理上下文结果
   @Override
   public void handleResult(ResultContext<?> context) {
     list.add(context.getResultObject());
   }
-
+   //获取结果集
   public List<Object> getResultList() {
     return list;
   }

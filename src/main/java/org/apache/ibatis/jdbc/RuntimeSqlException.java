@@ -16,24 +16,25 @@
 package org.apache.ibatis.jdbc;
 
 /**
+ * 运行SQL异常
  * @author Clinton Begin
  */
 public class RuntimeSqlException extends RuntimeException {
 
   private static final long serialVersionUID = 5224696788505678598L;
-
+  //重载空构造函数
   public RuntimeSqlException() {
     super();
   }
-
+  //重载传递信息的构造函数
   public RuntimeSqlException(String message) {
     super(message);
   }
-
+  //重载传递信息和Throwable的构造函数
   public RuntimeSqlException(String message, Throwable cause) {
     super(message, cause);
   }
-
+  //重载Throwable的构造函数
   public RuntimeSqlException(Throwable cause) {
     super(cause);
   }

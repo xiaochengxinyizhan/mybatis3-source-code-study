@@ -20,6 +20,7 @@ import org.apache.ibatis.logging.LogFactory;
 import org.apache.ibatis.mapping.MappedStatement;
 
 /**
+ *  指定这个行为 当发现一个自动映射目标的未知列
  * Specify the behavior when detects an unknown column (or unknown property type) of automatic mapping target.
  *
  * @since 3.4.0
@@ -28,6 +29,7 @@ import org.apache.ibatis.mapping.MappedStatement;
 public enum AutoMappingUnknownColumnBehavior {
 
   /**
+   * 默认什么也不做
    * Do nothing (Default).
    */
   NONE {
@@ -38,6 +40,7 @@ public enum AutoMappingUnknownColumnBehavior {
   },
 
   /**
+   * 输出警告日志
    * Output warning log.
    * Note: The log level of {@code 'org.apache.ibatis.session.AutoMappingUnknownColumnBehavior'} must be set to {@code WARN}.
    */
@@ -49,6 +52,7 @@ public enum AutoMappingUnknownColumnBehavior {
   },
 
   /**
+   * 输出失败映射
    * Fail mapping.
    * Note: throw {@link SqlSessionException}.
    */
@@ -60,6 +64,7 @@ public enum AutoMappingUnknownColumnBehavior {
   };
 
   /**
+   * 执行这个动作 当发现自动映射目标的一个未知列
    * Perform the action when detects an unknown column (or unknown property type) of automatic mapping target.
    * @param mappedStatement current mapped statement
    * @param columnName column name for mapping target
@@ -69,6 +74,7 @@ public enum AutoMappingUnknownColumnBehavior {
   public abstract void doAction(MappedStatement mappedStatement, String columnName, String propertyName, Class<?> propertyType);
 
   /**
+   * 构建错误信息
    * build error message.
    */
   private static String buildMessage(MappedStatement mappedStatement, String columnName, String property, Class<?> propertyType) {
@@ -82,7 +88,7 @@ public enum AutoMappingUnknownColumnBehavior {
       .append("]")
       .toString();
   }
-
+  //日志持有器
   private static class LogHolder {
     private static final Log log = LogFactory.getLog(AutoMappingUnknownColumnBehavior.class);
   }

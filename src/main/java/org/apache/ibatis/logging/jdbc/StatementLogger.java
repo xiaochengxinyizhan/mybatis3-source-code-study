@@ -25,6 +25,7 @@ import org.apache.ibatis.logging.Log;
 import org.apache.ibatis.reflection.ExceptionUtil;
 
 /**
+ * 添加日志的会话代理
  * Statement proxy to add logging.
  *
  * @author Clinton Begin
@@ -32,34 +33,38 @@ import org.apache.ibatis.reflection.ExceptionUtil;
  *
  */
 public final class StatementLogger extends BaseJdbcLogger implements InvocationHandler {
-
+  //会话
   private final Statement statement;
-
+  //会话日志器的构造器
   private StatementLogger(Statement stmt, Log statementLog, int queryStack) {
     super(statementLog, queryStack);
     this.statement = stmt;
   }
-
+  //执行代理方法
   @Override
   public Object invoke(Object proxy, Method method, Object[] params) throws Throwable {
     try {
       if (Object.class.equals(method.getDeclaringClass())) {
         return method.invoke(this, params);
       }
+      //执行方法中
       if (EXECUTE_METHODS.contains(method.getName())) {
         if (isDebugEnabled()) {
           debug(" Executing: " + removeBreakingWhitespace((String) params[0]), true);
         }
+        //执行查询
         if ("executeQuery".equals(method.getName())) {
           ResultSet rs = (ResultSet) method.invoke(statement, params);
           return rs == null ? null : ResultSetLogger.newInstance(rs, statementLog, queryStack);
         } else {
           return method.invoke(statement, params);
         }
+        //获取返回结果信息
       } else if ("getResultSet".equals(method.getName())) {
         ResultSet rs = (ResultSet) method.invoke(statement, params);
         return rs == null ? null : ResultSetLogger.newInstance(rs, statementLog, queryStack);
       } else {
+        //其余方法直接执行
         return method.invoke(statement, params);
       }
     } catch (Throwable t) {
@@ -68,6 +73,7 @@ public final class StatementLogger extends BaseJdbcLogger implements InvocationH
   }
 
   /**
+   * 创建一个会话的日志版本
    * Creates a logging version of a Statement.
    *
    * @param stmt - the statement
@@ -80,6 +86,7 @@ public final class StatementLogger extends BaseJdbcLogger implements InvocationH
   }
 
   /**
+   * 返回封装的会话
    * return the wrapped statement.
    *
    * @return the statement

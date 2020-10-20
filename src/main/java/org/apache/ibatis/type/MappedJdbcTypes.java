@@ -22,8 +22,9 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * 这个注解也指定了集合中的关于jdbc的类型处理器：xxxTypeHandler
  * The annotation that specify jdbc types to map {@link TypeHandler}.
- *
+ *使用方法
  * <p><br>
  * <b>How to use:</b>
  * <pre>
@@ -39,6 +40,7 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 public @interface MappedJdbcTypes {
   /**
+   * 返回JDBC的类型
    * Returns jdbc types to map {@link TypeHandler}.
    *
    * @return jdbc types
@@ -46,6 +48,7 @@ public @interface MappedJdbcTypes {
   JdbcType[] value();
 
   /**
+   * 集合中不存在是否返回
    * Returns whether map to jdbc null type.
    *
    * @return {@code true} if map, {@code false} if otherwise

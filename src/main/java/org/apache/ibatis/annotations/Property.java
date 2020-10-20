@@ -21,6 +21,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * 注入一个属性值的注解
  * The annotation that inject a property value.
  *
  * @since 3.4.2
@@ -33,6 +34,7 @@ import java.lang.annotation.Target;
 public @interface Property {
 
   /**
+   * 返回属性的名字
    * Returns the property name.
    *
    * @return the property name
@@ -40,6 +42,7 @@ public @interface Property {
   String name();
 
   /**
+   * 返回占位符的属性值
    * Returns the property value or placeholder.
    *
    * @return the property value or placeholder

@@ -16,15 +16,17 @@
 package org.apache.ibatis.scripting.xmltags;
 
 /**
+ * 静态文本sql节点
  * @author Clinton Begin
  */
 public class StaticTextSqlNode implements SqlNode {
+  //文本
   private final String text;
-
+  //构造函数
   public StaticTextSqlNode(String text) {
     this.text = text;
   }
-
+  //是否应用动态上下文
   @Override
   public boolean apply(DynamicContext context) {
     context.appendSql(text);

@@ -18,24 +18,25 @@ package org.apache.ibatis.builder;
 import org.apache.ibatis.exceptions.PersistenceException;
 
 /**
+ * 构建器异常
  * @author Clinton Begin
  */
 public class BuilderException extends PersistenceException {
 
   private static final long serialVersionUID = -3885164021020443281L;
-
+  //空构造函数
   public BuilderException() {
     super();
   }
-
+  //传递信息的构造函数
   public BuilderException(String message) {
     super(message);
   }
-
+  //传递信息和throwable的构造函数
   public BuilderException(String message, Throwable cause) {
     super(message, cause);
   }
-
+  //传递throwable的构造函数
   public BuilderException(Throwable cause) {
     super(cause);
   }

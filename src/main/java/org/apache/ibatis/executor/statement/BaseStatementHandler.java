@@ -34,22 +34,29 @@ import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.type.TypeHandlerRegistry;
 
 /**
+ * //基础会话处理器
  * @author Clinton Begin
  */
 public abstract class BaseStatementHandler implements StatementHandler {
-
+  //全局配置
   protected final Configuration configuration;
+  //对象工厂
   protected final ObjectFactory objectFactory;
+  //类型处理器注册器
   protected final TypeHandlerRegistry typeHandlerRegistry;
+  //结果集处理器
   protected final ResultSetHandler resultSetHandler;
+  //参数处理器
   protected final ParameterHandler parameterHandler;
-
+  //执行器
   protected final Executor executor;
+  //映射会话
   protected final MappedStatement mappedStatement;
+  //行数据
   protected final RowBounds rowBounds;
-
+  //执行sql
   protected BoundSql boundSql;
-
+  //基础会话处理器构造函数
   protected BaseStatementHandler(Executor executor, MappedStatement mappedStatement, Object parameterObject, RowBounds rowBounds, ResultHandler resultHandler, BoundSql boundSql) {
     this.configuration = mappedStatement.getConfiguration();
     this.executor = executor;
@@ -69,17 +76,17 @@ public abstract class BaseStatementHandler implements StatementHandler {
     this.parameterHandler = configuration.newParameterHandler(mappedStatement, parameterObject, boundSql);
     this.resultSetHandler = configuration.newResultSetHandler(executor, mappedStatement, rowBounds, parameterHandler, resultHandler, boundSql);
   }
-
+  //获取执行SQL
   @Override
   public BoundSql getBoundSql() {
     return boundSql;
   }
-
+  //获取参数处理器
   @Override
   public ParameterHandler getParameterHandler() {
     return parameterHandler;
   }
-
+  //准备会话
   @Override
   public Statement prepare(Connection connection, Integer transactionTimeout) throws SQLException {
     ErrorContext.instance().sql(boundSql.getSql());
@@ -97,9 +104,9 @@ public abstract class BaseStatementHandler implements StatementHandler {
       throw new ExecutorException("Error preparing statement.  Cause: " + e, e);
     }
   }
-
+  //实例话会话
   protected abstract Statement instantiateStatement(Connection connection) throws SQLException;
-
+  //设置会话超时
   protected void setStatementTimeout(Statement stmt, Integer transactionTimeout) throws SQLException {
     Integer queryTimeout = null;
     if (mappedStatement.getTimeout() != null) {
@@ -112,7 +119,7 @@ public abstract class BaseStatementHandler implements StatementHandler {
     }
     StatementUtil.applyTransactionTimeout(stmt, queryTimeout, transactionTimeout);
   }
-
+  //设置拉取数量
   protected void setFetchSize(Statement stmt) throws SQLException {
     Integer fetchSize = mappedStatement.getFetchSize();
     if (fetchSize != null) {
@@ -124,7 +131,7 @@ public abstract class BaseStatementHandler implements StatementHandler {
       stmt.setFetchSize(defaultFetchSize);
     }
   }
-
+  //关闭会话
   protected void closeStatement(Statement statement) {
     try {
       if (statement != null) {
@@ -134,7 +141,7 @@ public abstract class BaseStatementHandler implements StatementHandler {
       //ignore
     }
   }
-
+  //生成主键
   protected void generateKeys(Object parameter) {
     KeyGenerator keyGenerator = mappedStatement.getKeyGenerator();
     ErrorContext.instance().store();

@@ -16,8 +16,10 @@
 package org.apache.ibatis.mapping;
 
 /**
+ * sql命令类型
  * @author Clinton Begin
  */
 public enum SqlCommandType {
+  //未知，插入，更新，删除，查询，刷新
   UNKNOWN, INSERT, UPDATE, DELETE, SELECT, FLUSH
 }

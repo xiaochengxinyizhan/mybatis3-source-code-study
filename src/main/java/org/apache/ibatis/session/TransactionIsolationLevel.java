@@ -18,21 +18,27 @@ package org.apache.ibatis.session;
 import java.sql.Connection;
 
 /**
+ * 事务隔离级别
  * @author Clinton Begin
  */
 public enum TransactionIsolationLevel {
+  //无事务隔离
   NONE(Connection.TRANSACTION_NONE),
+  //读取已提交
   READ_COMMITTED(Connection.TRANSACTION_READ_COMMITTED),
+  //读取未提交
   READ_UNCOMMITTED(Connection.TRANSACTION_READ_UNCOMMITTED),
+  //可重复读
   REPEATABLE_READ(Connection.TRANSACTION_REPEATABLE_READ),
+  //序列化
   SERIALIZABLE(Connection.TRANSACTION_SERIALIZABLE);
-
+  //级别
   private final int level;
-
+  //级别构造函数
   TransactionIsolationLevel(int level) {
     this.level = level;
   }
-
+  //获取级别
   public int getLevel() {
     return level;
   }

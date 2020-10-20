@@ -16,8 +16,10 @@
 package org.apache.ibatis.mapping;
 
 /**
+ * 会话类型
  * @author Clinton Begin
  */
 public enum StatementType {
+  //会话，预会话，回调
   STATEMENT, PREPARED, CALLABLE
 }

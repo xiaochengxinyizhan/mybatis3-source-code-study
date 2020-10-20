@@ -22,6 +22,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * 指定提供更新记录的方法的SQL注解
  * The annotation that specify a method that provide an SQL for updating record(s).
  *
  * <p><br>
@@ -48,6 +49,7 @@ import java.lang.annotation.Target;
 public @interface UpdateProvider {
 
   /**
+   * 指定实现SQL服务方法的类型
    * Specify a type that implements an SQL provider method.
    *
    * @return a type that implements an SQL provider method
@@ -57,6 +59,7 @@ public @interface UpdateProvider {
   Class<?> value() default void.class;
 
   /**
+   * 指定实现SQL服务方法的类型
    * Specify a type that implements an SQL provider method.
    * <p>
    * This attribute is alias of {@link #value()}.
@@ -68,6 +71,7 @@ public @interface UpdateProvider {
   Class<?> type() default void.class;
 
   /**
+   * 指定服务一个SQL的方法
    * Specify a method for providing an SQL.
    *
    * <p>

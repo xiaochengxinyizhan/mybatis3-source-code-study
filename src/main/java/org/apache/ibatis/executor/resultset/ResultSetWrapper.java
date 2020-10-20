@@ -36,19 +36,27 @@ import org.apache.ibatis.type.TypeHandlerRegistry;
 import org.apache.ibatis.type.UnknownTypeHandler;
 
 /**
+ * 结果集包装器
  * @author Iwao AVE!
  */
 public class ResultSetWrapper {
-
+  //结果集
   private final ResultSet resultSet;
+  //类型处理器注册器
   private final TypeHandlerRegistry typeHandlerRegistry;
+  //列字段
   private final List<String> columnNames = new ArrayList<>();
+  //类名称
   private final List<String> classNames = new ArrayList<>();
+  //jdbc类型
   private final List<JdbcType> jdbcTypes = new ArrayList<>();
+  //类型处理器集合
   private final Map<String, Map<Class<?>, TypeHandler<?>>> typeHandlerMap = new HashMap<>();
+  //映射字段集合
   private final Map<String, List<String>> mappedColumnNamesMap = new HashMap<>();
+  //未映射字段集合
   private final Map<String, List<String>> unMappedColumnNamesMap = new HashMap<>();
-
+  //构造函数
   public ResultSetWrapper(ResultSet rs, Configuration configuration) throws SQLException {
     super();
     this.typeHandlerRegistry = configuration.getTypeHandlerRegistry();
@@ -61,23 +69,23 @@ public class ResultSetWrapper {
       classNames.add(metaData.getColumnClassName(i));
     }
   }
-
+  //获取结果集
   public ResultSet getResultSet() {
     return resultSet;
   }
-
+  //获取列名
   public List<String> getColumnNames() {
     return this.columnNames;
   }
-
+  //获取类名
   public List<String> getClassNames() {
     return Collections.unmodifiableList(classNames);
   }
-
+  //获取jdbc类型
   public List<JdbcType> getJdbcTypes() {
     return jdbcTypes;
   }
-
+  //获取jdbc类型根据某个列
   public JdbcType getJdbcType(String columnName) {
     for (int i = 0 ; i < columnNames.size(); i++) {
       if (columnNames.get(i).equalsIgnoreCase(columnName)) {
@@ -88,6 +96,7 @@ public class ResultSetWrapper {
   }
 
   /**
+   * 获取类型处理器使用， 当读取结果集。通过从属性类型检索获取类型处理器注册器，如果没找到，则从jdbc类型获取
    * Gets the type handler to use when reading the result set.
    * Tries to get from the TypeHandlerRegistry by searching for the property type.
    * If not found it gets the column JDBC type and tries to get a handler for it.
@@ -128,7 +137,7 @@ public class ResultSetWrapper {
     }
     return handler;
   }
-
+  //解析类
   private Class<?> resolveClass(String className) {
     try {
       // #699 className could be null
@@ -140,7 +149,7 @@ public class ResultSetWrapper {
     }
     return null;
   }
-
+  //加载映射和未映射的列名字
   private void loadMappedAndUnmappedColumnNames(ResultMap resultMap, String columnPrefix) throws SQLException {
     List<String> mappedColumnNames = new ArrayList<>();
     List<String> unmappedColumnNames = new ArrayList<>();
@@ -157,7 +166,7 @@ public class ResultSetWrapper {
     mappedColumnNamesMap.put(getMapKey(resultMap, columnPrefix), mappedColumnNames);
     unMappedColumnNamesMap.put(getMapKey(resultMap, columnPrefix), unmappedColumnNames);
   }
-
+  //获取映射的列名字
   public List<String> getMappedColumnNames(ResultMap resultMap, String columnPrefix) throws SQLException {
     List<String> mappedColumnNames = mappedColumnNamesMap.get(getMapKey(resultMap, columnPrefix));
     if (mappedColumnNames == null) {
@@ -166,7 +175,7 @@ public class ResultSetWrapper {
     }
     return mappedColumnNames;
   }
-
+  //获取未映射的列名字
   public List<String> getUnmappedColumnNames(ResultMap resultMap, String columnPrefix) throws SQLException {
     List<String> unMappedColumnNames = unMappedColumnNamesMap.get(getMapKey(resultMap, columnPrefix));
     if (unMappedColumnNames == null) {
@@ -175,11 +184,11 @@ public class ResultSetWrapper {
     }
     return unMappedColumnNames;
   }
-
+  //获取映射的key
   private String getMapKey(ResultMap resultMap, String columnPrefix) {
     return resultMap.getId() + ":" + columnPrefix;
   }
-
+  //预置前缀
   private Set<String> prependPrefixes(Set<String> columnNames, String prefix) {
     if (columnNames == null || columnNames.isEmpty() || prefix == null || prefix.length() == 0) {
       return columnNames;

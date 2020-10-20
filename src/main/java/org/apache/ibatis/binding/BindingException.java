@@ -18,24 +18,25 @@ package org.apache.ibatis.binding;
 import org.apache.ibatis.exceptions.PersistenceException;
 
 /**
+ * 绑定异常
  * @author Clinton Begin
  */
 public class BindingException extends PersistenceException {
 
   private static final long serialVersionUID = 4300802238789381562L;
-
+  //空构造函数
   public BindingException() {
     super();
   }
-
+  //传递信息的构造函数
   public BindingException(String message) {
     super(message);
   }
-
+  //传递信息和throwable的构造函数
   public BindingException(String message, Throwable cause) {
     super(message, cause);
   }
-
+  //传递throwable的构造函数
   public BindingException(Throwable cause) {
     super(cause);
   }

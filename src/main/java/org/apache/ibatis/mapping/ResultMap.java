@@ -32,36 +32,50 @@ import org.apache.ibatis.reflection.ParamNameUtil;
 import org.apache.ibatis.session.Configuration;
 
 /**
+ * 结果集
  * @author Clinton Begin
  */
 public class ResultMap {
+  //全局配置
   private Configuration configuration;
-
+  //id
   private String id;
+  //类型
   private Class<?> type;
+  //结果映射
   private List<ResultMapping> resultMappings;
+  //id结果映射
   private List<ResultMapping> idResultMappings;
+  //构造器结果映射
   private List<ResultMapping> constructorResultMappings;
+  //属性结果映射
   private List<ResultMapping> propertyResultMappings;
+  //被映射的列
   private Set<String> mappedColumns;
+  //被映射的属性
   private Set<String> mappedProperties;
+  //鉴别器
   private Discriminator discriminator;
+  //是否有嵌套结果集
   private boolean hasNestedResultMaps;
+  //是否有嵌套查询
   private boolean hasNestedQueries;
+  //是否自动映射
   private Boolean autoMapping;
 
   private ResultMap() {
   }
-
+  //内部构建器
   public static class Builder {
+    //日志
     private static final Log log = LogFactory.getLog(Builder.class);
-
+   //结果映射
     private ResultMap resultMap = new ResultMap();
-
+   //构造函数
     public Builder(Configuration configuration, String id, Class<?> type, List<ResultMapping> resultMappings) {
       this(configuration, id, type, resultMappings, null);
     }
-
+    //构造函数
     public Builder(Configuration configuration, String id, Class<?> type, List<ResultMapping> resultMappings, Boolean autoMapping) {
       resultMap.configuration = configuration;
       resultMap.id = id;
@@ -69,16 +83,16 @@ public class ResultMap {
       resultMap.resultMappings = resultMappings;
       resultMap.autoMapping = autoMapping;
     }
-
+    //鉴别器
     public Builder discriminator(Discriminator discriminator) {
       resultMap.discriminator = discriminator;
       return this;
     }
-
+   //返回结果类型
     public Class<?> type() {
       return resultMap.type;
     }
-
+   //构建方法
     public ResultMap build() {
       if (resultMap.id == null) {
         throw new IllegalArgumentException("ResultMaps must have an id");
@@ -89,6 +103,7 @@ public class ResultMap {
       resultMap.constructorResultMappings = new ArrayList<>();
       resultMap.propertyResultMappings = new ArrayList<>();
       final List<String> constructorArgNames = new ArrayList<>();
+      //处理结果的映射
       for (ResultMapping resultMapping : resultMap.resultMappings) {
         resultMap.hasNestedQueries = resultMap.hasNestedQueries || resultMapping.getNestedQueryId() != null;
         resultMap.hasNestedResultMaps = resultMap.hasNestedResultMaps || (resultMapping.getNestedResultMapId() != null && resultMapping.getResultSet() == null);
@@ -119,6 +134,7 @@ public class ResultMap {
           resultMap.idResultMappings.add(resultMapping);
         }
       }
+      //id结果映射
       if (resultMap.idResultMappings.isEmpty()) {
         resultMap.idResultMappings.addAll(resultMap.resultMappings);
       }
@@ -136,6 +152,7 @@ public class ResultMap {
           return paramIdx1 - paramIdx2;
         });
       }
+      //所有的结果可读设置
       // lock down collections
       resultMap.resultMappings = Collections.unmodifiableList(resultMap.resultMappings);
       resultMap.idResultMappings = Collections.unmodifiableList(resultMap.idResultMappings);
@@ -144,7 +161,7 @@ public class ResultMap {
       resultMap.mappedColumns = Collections.unmodifiableSet(resultMap.mappedColumns);
       return resultMap;
     }
-
+   //参数名字匹配构造器
     private List<String> argNamesOfMatchingConstructor(List<String> constructorArgNames) {
       Constructor<?>[] constructors = resultMap.type.getDeclaredConstructors();
       for (Constructor<?> constructor : constructors) {
@@ -159,7 +176,7 @@ public class ResultMap {
       }
       return null;
     }
-
+   //参数类型匹配
     private boolean argTypesMatch(final List<String> constructorArgNames,
         Class<?>[] paramTypes, List<String> paramNames) {
       for (int i = 0; i < constructorArgNames.size(); i++) {
@@ -178,7 +195,7 @@ public class ResultMap {
       }
       return true;
     }
-
+   //获取参数名字
     private List<String> getArgNames(Constructor<?> constructor) {
       List<String> paramNames = new ArrayList<>();
       List<String> actualParamNames = null;
@@ -205,7 +222,7 @@ public class ResultMap {
       return paramNames;
     }
   }
-
+  //获取只查询的get方法
   public String getId() {
     return id;
   }

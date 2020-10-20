@@ -29,26 +29,27 @@ import org.apache.ibatis.cache.CacheException;
 import org.apache.ibatis.io.Resources;
 
 /**
+ * 序列化缓存
  * @author Clinton Begin
  */
 public class SerializedCache implements Cache {
-
+  ///缓存
   private final Cache delegate;
-
+  //构造函数
   public SerializedCache(Cache delegate) {
     this.delegate = delegate;
   }
-
+  //获取ID
   @Override
   public String getId() {
     return delegate.getId();
   }
-
+  //获取大小
   @Override
   public int getSize() {
     return delegate.getSize();
   }
-
+  //存放对象
   @Override
   public void putObject(Object key, Object object) {
     if (object == null || object instanceof Serializable) {
@@ -57,33 +58,33 @@ public class SerializedCache implements Cache {
       throw new CacheException("SharedCache failed to make a copy of a non-serializable object: " + object);
     }
   }
-
+  //获取对象
   @Override
   public Object getObject(Object key) {
     Object object = delegate.getObject(key);
     return object == null ? null : deserialize((byte[]) object);
   }
-
+  //移除对象
   @Override
   public Object removeObject(Object key) {
     return delegate.removeObject(key);
   }
-
+  //清空缓存
   @Override
   public void clear() {
     delegate.clear();
   }
-
+  //hash值
   @Override
   public int hashCode() {
     return delegate.hashCode();
   }
-
+  //比较对象
   @Override
   public boolean equals(Object obj) {
     return delegate.equals(obj);
   }
-
+  //序列化对象
   private byte[] serialize(Serializable value) {
     try (ByteArrayOutputStream bos = new ByteArrayOutputStream();
          ObjectOutputStream oos = new ObjectOutputStream(bos)) {
@@ -94,7 +95,7 @@ public class SerializedCache implements Cache {
       throw new CacheException("Error serializing object.  Cause: " + e, e);
     }
   }
-
+  //反序列化
   private Serializable deserialize(byte[] value) {
     Serializable result;
     try (ByteArrayInputStream bis = new ByteArrayInputStream(value);
@@ -105,13 +106,13 @@ public class SerializedCache implements Cache {
     }
     return result;
   }
-
+  //定制对象输入流
   public static class CustomObjectInputStream extends ObjectInputStream {
 
     public CustomObjectInputStream(InputStream in) throws IOException {
       super(in);
     }
-
+    //移除对象类
     @Override
     protected Class<?> resolveClass(ObjectStreamClass desc) throws ClassNotFoundException {
       return Resources.classForName(desc.getName());

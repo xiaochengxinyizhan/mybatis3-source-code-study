@@ -41,163 +41,177 @@ import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
 /**
+ * XPath解析
  * @author Clinton Begin
  * @author Kazuki Shimizu
  */
 public class XPathParser {
-
+  //w3c.dom.Document
   private final Document document;
+  //校验
   private boolean validation;
+  //实体解析器
   private EntityResolver entityResolver;
+  //属性变量
   private Properties variables;
+  //xpath
   private XPath xpath;
-
+  //解析xml为dom对象
   public XPathParser(String xml) {
     commonConstructor(false, null, null);
     this.document = createDocument(new InputSource(new StringReader(xml)));
   }
-
+  //解析字符流流为dom对象
   public XPathParser(Reader reader) {
     commonConstructor(false, null, null);
     this.document = createDocument(new InputSource(reader));
   }
-
+  //解析字节流为dom对象
   public XPathParser(InputStream inputStream) {
     commonConstructor(false, null, null);
     this.document = createDocument(new InputSource(inputStream));
   }
-
+  //解析dom对象
   public XPathParser(Document document) {
     commonConstructor(false, null, null);
     this.document = document;
   }
-
+  //解析xml和是否需要校验
   public XPathParser(String xml, boolean validation) {
     commonConstructor(validation, null, null);
     this.document = createDocument(new InputSource(new StringReader(xml)));
   }
-
+  //解析字符流和是否需要校验
   public XPathParser(Reader reader, boolean validation) {
     commonConstructor(validation, null, null);
     this.document = createDocument(new InputSource(reader));
   }
-
+  //解析字节流和是否需要校验
   public XPathParser(InputStream inputStream, boolean validation) {
     commonConstructor(validation, null, null);
     this.document = createDocument(new InputSource(inputStream));
   }
-
+  //解析dom对象和是否需要校验
   public XPathParser(Document document, boolean validation) {
     commonConstructor(validation, null, null);
     this.document = document;
   }
-
+  //解析xml和是否需要校验以及变量
   public XPathParser(String xml, boolean validation, Properties variables) {
     commonConstructor(validation, variables, null);
     this.document = createDocument(new InputSource(new StringReader(xml)));
   }
-
+  //解析字符流和是否需要校验以及变量
   public XPathParser(Reader reader, boolean validation, Properties variables) {
     commonConstructor(validation, variables, null);
     this.document = createDocument(new InputSource(reader));
   }
-
+  //解析字节流和是否需要校验
   public XPathParser(InputStream inputStream, boolean validation, Properties variables) {
     commonConstructor(validation, variables, null);
     this.document = createDocument(new InputSource(inputStream));
   }
-
+  //解析dom和是否需要校验
   public XPathParser(Document document, boolean validation, Properties variables) {
     commonConstructor(validation, variables, null);
     this.document = document;
   }
-
+  //解析xml和是否需要校验和变量属性和实体解析类
   public XPathParser(String xml, boolean validation, Properties variables, EntityResolver entityResolver) {
     commonConstructor(validation, variables, entityResolver);
     this.document = createDocument(new InputSource(new StringReader(xml)));
   }
-
+  //解析字符流和是否需要校验和变量属性和实体解析类
   public XPathParser(Reader reader, boolean validation, Properties variables, EntityResolver entityResolver) {
     commonConstructor(validation, variables, entityResolver);
     this.document = createDocument(new InputSource(reader));
   }
-
+  //解析字节流和是否需要校验和变量属性和实体解析类
   public XPathParser(InputStream inputStream, boolean validation, Properties variables, EntityResolver entityResolver) {
     commonConstructor(validation, variables, entityResolver);
     this.document = createDocument(new InputSource(inputStream));
   }
-
+  //解析dom和是否需要校验和变量属性和实体解析类
   public XPathParser(Document document, boolean validation, Properties variables, EntityResolver entityResolver) {
     commonConstructor(validation, variables, entityResolver);
     this.document = document;
   }
-
+  //设置变量
   public void setVariables(Properties variables) {
     this.variables = variables;
   }
-
+  //获取string
   public String evalString(String expression) {
     return evalString(document, expression);
   }
-
+  //根据root节点和正则获取属性
   public String evalString(Object root, String expression) {
     String result = (String) evaluate(expression, root, XPathConstants.STRING);
     result = PropertyParser.parse(result, variables);
     return result;
   }
-
+  //获取boolean
   public Boolean evalBoolean(String expression) {
     return evalBoolean(document, expression);
   }
-
+  //根据root节点和正则获取属性
   public Boolean evalBoolean(Object root, String expression) {
     return (Boolean) evaluate(expression, root, XPathConstants.BOOLEAN);
   }
-
+  //解析short
   public Short evalShort(String expression) {
     return evalShort(document, expression);
   }
+  //解析short
 
   public Short evalShort(Object root, String expression) {
     return Short.valueOf(evalString(root, expression));
   }
+  //解析int
 
   public Integer evalInteger(String expression) {
     return evalInteger(document, expression);
   }
+  //解析int
 
   public Integer evalInteger(Object root, String expression) {
     return Integer.valueOf(evalString(root, expression));
   }
+  //解析long
 
   public Long evalLong(String expression) {
     return evalLong(document, expression);
   }
+  //解析long
 
   public Long evalLong(Object root, String expression) {
     return Long.valueOf(evalString(root, expression));
   }
+  //解析float
 
   public Float evalFloat(String expression) {
     return evalFloat(document, expression);
   }
+  //解析float
 
   public Float evalFloat(Object root, String expression) {
     return Float.valueOf(evalString(root, expression));
   }
+  //解析double
 
   public Double evalDouble(String expression) {
     return evalDouble(document, expression);
   }
+  //解析double
 
   public Double evalDouble(Object root, String expression) {
     return (Double) evaluate(expression, root, XPathConstants.NUMBER);
   }
-
+//解析Nodes集合
   public List<XNode> evalNodes(String expression) {
     return evalNodes(document, expression);
   }
-
+//解析Nodes集合
   public List<XNode> evalNodes(Object root, String expression) {
     List<XNode> xnodes = new ArrayList<>();
     NodeList nodes = (NodeList) evaluate(expression, root, XPathConstants.NODESET);
@@ -206,11 +220,11 @@ public class XPathParser {
     }
     return xnodes;
   }
-
+//解析Node
   public XNode evalNode(String expression) {
     return evalNode(document, expression);
   }
-
+//解析Node
   public XNode evalNode(Object root, String expression) {
     Node node = (Node) evaluate(expression, root, XPathConstants.NODE);
     if (node == null) {
@@ -218,7 +232,7 @@ public class XPathParser {
     }
     return new XNode(this, node, variables);
   }
-
+//解析Value值
   private Object evaluate(String expression, Object root, QName returnType) {
     try {
       return xpath.evaluate(expression, root, returnType);
@@ -226,7 +240,7 @@ public class XPathParser {
       throw new BuilderException("Error evaluating XPath.  Cause: " + e, e);
     }
   }
-
+//  根据输入流创建dom对象
   private Document createDocument(InputSource inputSource) {
     // important: this must only be called AFTER common constructor
     try {
@@ -263,7 +277,7 @@ public class XPathParser {
       throw new BuilderException("Error creating document instance.  Cause: " + e, e);
     }
   }
-
+  //公共构造器
   private void commonConstructor(boolean validation, Properties variables, EntityResolver entityResolver) {
     this.validation = validation;
     this.entityResolver = entityResolver;

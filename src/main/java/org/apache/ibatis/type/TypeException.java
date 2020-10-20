@@ -18,24 +18,26 @@ package org.apache.ibatis.type;
 import org.apache.ibatis.exceptions.PersistenceException;
 
 /**
+ * 类型异常，之前在异常的包 解释过PersistenceException 继承 已经废弃的IbatisException 继承 RuntimeException
+ * 所以从根本上讲继承了运行异常，但是统一外部异常父类PersistenceException
  * @author Clinton Begin
  */
 public class TypeException extends PersistenceException {
 
   private static final long serialVersionUID = 8614420898975117130L;
-
+  //空构造器
   public TypeException() {
     super();
   }
-
+ //传递信息构造器
   public TypeException(String message) {
     super(message);
   }
-
+ //传递信息和Throwable的构造器
   public TypeException(String message, Throwable cause) {
     super(message, cause);
   }
-
+  //传递Throwable的构造器
   public TypeException(Throwable cause) {
     super(cause);
   }

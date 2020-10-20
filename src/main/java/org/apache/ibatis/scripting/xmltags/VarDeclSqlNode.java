@@ -16,18 +16,20 @@
 package org.apache.ibatis.scripting.xmltags;
 
 /**
+ *Var声明的sql节点
  * @author Frank D. Martinez [mnesarco]
  */
 public class VarDeclSqlNode implements SqlNode {
-
+  //名字
   private final String name;
+  //表达式
   private final String expression;
-
+  //构造函数
   public VarDeclSqlNode(String var, String exp) {
     name = var;
     expression = exp;
   }
-
+  //是否应用动态上下文
   @Override
   public boolean apply(DynamicContext context) {
     final Object value = OgnlCache.getValue(expression, context.getBindings());

@@ -24,6 +24,7 @@ import java.lang.annotation.Target;
 import org.apache.ibatis.scripting.LanguageDriver;
 
 /**
+ * 指定使用语言驱动的注解
  * The annotation that specify a {@link LanguageDriver} to use.
  *
  * <p><br>
@@ -42,6 +43,7 @@ import org.apache.ibatis.scripting.LanguageDriver;
 @Target(ElementType.METHOD)
 public @interface Lang {
   /**
+   * 返回使用的驱动类型的类型
    * Returns the {@link LanguageDriver} implementation type to use.
    *
    * @return the {@link LanguageDriver} implementation type

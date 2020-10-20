@@ -18,11 +18,13 @@ package org.apache.ibatis.reflection;
 import java.util.Arrays;
 
 /**
+ * 提供hashcode，equals和同String方法处理数组
  * Provides hashCode, equals and toString methods that can handle array.
  */
 public class ArrayUtil {
 
   /**
+   * 返回一个对象的hashcode值
    * Returns a hash code for {@code obj}.
    *
    * @param obj
@@ -61,6 +63,7 @@ public class ArrayUtil {
   }
 
   /**
+   * 比较2个对象，返回boolean值
    * Compares two objects. Returns <code>true</code> if
    * <ul>
    * <li>{@code thisObj} and {@code thatObj} are both <code>null</code></li>
@@ -112,6 +115,7 @@ public class ArrayUtil {
   }
 
   /**
+   * 返回toString方法
    * If the {@code obj} is an array, toString() method of {@link Arrays} is called. Otherwise
    * {@link Object#toString()} is called. Returns "null" if {@code obj} is <code>null</code>.
    *

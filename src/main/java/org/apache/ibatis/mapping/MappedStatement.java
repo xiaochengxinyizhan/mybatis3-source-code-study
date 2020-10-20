@@ -29,41 +29,65 @@ import org.apache.ibatis.scripting.LanguageDriver;
 import org.apache.ibatis.session.Configuration;
 
 /**
+ * 映射会话
  * @author Clinton Begin
  */
 public final class MappedStatement {
-
+  //资源
   private String resource;
+  //全局配置
   private Configuration configuration;
+   //id
   private String id;
+  //拉取数量
   private Integer fetchSize;
+  //超时
   private Integer timeout;
+  //会话类型
   private StatementType statementType;
+  //结果集类型
   private ResultSetType resultSetType;
+  //sql源
   private SqlSource sqlSource;
+  //缓存
   private Cache cache;
+  //参数映射
   private ParameterMap parameterMap;
+  //结果集合
   private List<ResultMap> resultMaps;
+  //是否有必要刷新缓存
   private boolean flushCacheRequired;
+  //是否使用缓存
   private boolean useCache;
+  //结果是否有序
   private boolean resultOrdered;
+  //sql命令类型
   private SqlCommandType sqlCommandType;
+  //是否生成主键
   private KeyGenerator keyGenerator;
+  //key属性集合
   private String[] keyProperties;
+  //key列集合
   private String[] keyColumns;
+  //是否有嵌套结果集合
   private boolean hasNestedResultMaps;
+  //数据库ID
   private String databaseId;
+  //会话日志
   private Log statementLog;
+  //语言驱动
   private LanguageDriver lang;
+  //结果集
   private String[] resultSets;
-
+  //映射会话
   MappedStatement() {
     // constructor disabled
   }
-
+  //内部构建类
   public static class Builder {
+    //映射会话
     private MappedStatement mappedStatement = new MappedStatement();
-
+    //构建器
     public Builder(Configuration configuration, String id, SqlSource sqlSource, SqlCommandType sqlCommandType) {
       mappedStatement.configuration = configuration;
       mappedStatement.id = id;
@@ -73,29 +97,31 @@ public final class MappedStatement {
       mappedStatement.parameterMap = new ParameterMap.Builder(configuration, "defaultParameterMap", null, new ArrayList<>()).build();
       mappedStatement.resultMaps = new ArrayList<>();
       mappedStatement.sqlCommandType = sqlCommandType;
+      //Jdbc3KeyGenerator是生成key的主要实现
       mappedStatement.keyGenerator = configuration.isUseGeneratedKeys() && SqlCommandType.INSERT.equals(sqlCommandType) ? Jdbc3KeyGenerator.INSTANCE : NoKeyGenerator.INSTANCE;
       String logId = id;
       if (configuration.getLogPrefix() != null) {
         logId = configuration.getLogPrefix() + id;
       }
       mappedStatement.statementLog = LogFactory.getLog(logId);
+      //获取默认的脚本语言实例
       mappedStatement.lang = configuration.getDefaultScriptingLanguageInstance();
     }
-
+    //映射资源
     public Builder resource(String resource) {
       mappedStatement.resource = resource;
       return this;
     }
-
+    //映射ID
     public String id() {
       return mappedStatement.id;
     }
-
+    //参数映射
     public Builder parameterMap(ParameterMap parameterMap) {
       mappedStatement.parameterMap = parameterMap;
       return this;
     }
-
+    //结果集
     public Builder resultMaps(List<ResultMap> resultMaps) {
       mappedStatement.resultMaps = resultMaps;
       for (ResultMap resultMap : resultMaps) {
@@ -103,78 +129,79 @@ public final class MappedStatement {
       }
       return this;
     }
-
+    //拉取数量
     public Builder fetchSize(Integer fetchSize) {
       mappedStatement.fetchSize = fetchSize;
       return this;
     }
-
+    //超时时间
     public Builder timeout(Integer timeout) {
       mappedStatement.timeout = timeout;
       return this;
     }
-
+    //会话类型
     public Builder statementType(StatementType statementType) {
       mappedStatement.statementType = statementType;
       return this;
     }
-
+    //结果集类型
     public Builder resultSetType(ResultSetType resultSetType) {
       mappedStatement.resultSetType = resultSetType == null ? ResultSetType.DEFAULT : resultSetType;
       return this;
     }
-
+   //缓存
     public Builder cache(Cache cache) {
       mappedStatement.cache = cache;
       return this;
     }
-
+    //是否有必要刷新缓存
     public Builder flushCacheRequired(boolean flushCacheRequired) {
       mappedStatement.flushCacheRequired = flushCacheRequired;
       return this;
     }
-
+   //是否使用缓存
     public Builder useCache(boolean useCache) {
       mappedStatement.useCache = useCache;
       return this;
     }
-
+    //是否结果有序
     public Builder resultOrdered(boolean resultOrdered) {
       mappedStatement.resultOrdered = resultOrdered;
       return this;
     }
-
+    //是否生成主键
     public Builder keyGenerator(KeyGenerator keyGenerator) {
       mappedStatement.keyGenerator = keyGenerator;
       return this;
     }
-
+    //key属性
     public Builder keyProperty(String keyProperty) {
       mappedStatement.keyProperties = delimitedStringToArray(keyProperty);
       return this;
     }
-
+    //key列
     public Builder keyColumn(String keyColumn) {
       mappedStatement.keyColumns = delimitedStringToArray(keyColumn);
       return this;
     }
-
+    //数据库ID
     public Builder databaseId(String databaseId) {
       mappedStatement.databaseId = databaseId;
       return this;
     }
-
+    //语言驱动
     public Builder lang(LanguageDriver driver) {
       mappedStatement.lang = driver;
       return this;
     }
-
+    //结果集
     public Builder resultSets(String resultSet) {
       mappedStatement.resultSets = delimitedStringToArray(resultSet);
       return this;
     }
 
     /**
+     * 不再建议使用
      * @deprecated Use {@link #resultSets}
      */
     @Deprecated
@@ -182,7 +209,7 @@ public final class MappedStatement {
       mappedStatement.resultSets = delimitedStringToArray(resultSet);
       return this;
     }
-
+    //构建返回会话
     public MappedStatement build() {
       assert mappedStatement.configuration != null;
       assert mappedStatement.id != null;
@@ -192,7 +219,7 @@ public final class MappedStatement {
       return mappedStatement;
     }
   }
-
+  //属性的get方法，没有set防止外部破坏内部构建
   public KeyGenerator getKeyGenerator() {
     return keyGenerator;
   }
@@ -286,6 +313,7 @@ public final class MappedStatement {
   }
 
   /**
+   * 不建议使用
    * @deprecated Use {@link #getResultSets()}
    */
   @Deprecated
@@ -313,7 +341,7 @@ public final class MappedStatement {
 
     return boundSql;
   }
-
+  //根据逗号分割返回数组
   private static String[] delimitedStringToArray(String in) {
     if (in == null || in.trim().length() == 0) {
       return null;

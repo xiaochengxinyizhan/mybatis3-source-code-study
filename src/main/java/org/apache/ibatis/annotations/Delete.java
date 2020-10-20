@@ -22,6 +22,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * 指定SQL的删除记录注解
  * The annotation that specify an SQL for deleting record(s).
  *
  * <p><br>
@@ -39,6 +40,7 @@ import java.lang.annotation.Target;
 @Target(ElementType.METHOD)
 public @interface Delete {
   /**
+   * 返回删除记录的SQL
    * Returns an SQL for deleting record(s).
    *
    * @return an SQL for deleting record(s)

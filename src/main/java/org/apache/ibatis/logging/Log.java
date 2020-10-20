@@ -16,22 +16,23 @@
 package org.apache.ibatis.logging;
 
 /**
+ * 日志接口
  * @author Clinton Begin
  */
 public interface Log {
-
+  //是否开启debug模式
   boolean isDebugEnabled();
-
+  //是否开启trace模式
   boolean isTraceEnabled();
-
+  //输出错误信息
   void error(String s, Throwable e);
-
+  //输出错误信息
   void error(String s);
-
+  //输出debug信息
   void debug(String s);
-
+  //输出trace信息
   void trace(String s);
-
+  //输出war信息
   void warn(String s);
 
 }

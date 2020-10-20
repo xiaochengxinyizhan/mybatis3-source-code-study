@@ -26,11 +26,13 @@ import java.lang.reflect.WildcardType;
 import java.util.Arrays;
 
 /**
+ * 类型参数解析器
  * @author Iwao AVE!
  */
 public class TypeParameterResolver {
 
   /**
+   * 属性type，在声明中如果有类型参数，他们将被解析称实际运行的类型。
    * @return The field type as {@link Type}. If it has type parameters in the declaration,<br>
    *         they will be resolved to the actual runtime {@link Type}s.
    */
@@ -41,6 +43,7 @@ public class TypeParameterResolver {
   }
 
   /**
+   * 方法的返回类型，在声明中如果有类型参数，他们将被解析给实际运行类型
    * @return The return type of the method as {@link Type}. If it has type parameters in the declaration,<br>
    *         they will be resolved to the actual runtime {@link Type}s.
    */
@@ -51,6 +54,7 @@ public class TypeParameterResolver {
   }
 
   /**
+   * 方法的参数类型比如数组type，在声明中如果有类型参数，他们将被解析给实际运行类型
    * @return The parameter types of the method as an array of {@link Type}s. If they have type parameters in the declaration,<br>
    *         they will be resolved to the actual runtime {@link Type}s.
    */
@@ -63,36 +67,43 @@ public class TypeParameterResolver {
     }
     return result;
   }
-
+  //解析类型
   private static Type resolveType(Type type, Type srcType, Class<?> declaringClass) {
+    //类型变量
     if (type instanceof TypeVariable) {
       return resolveTypeVar((TypeVariable<?>) type, srcType, declaringClass);
+   //参数化类型
     } else if (type instanceof ParameterizedType) {
       return resolveParameterizedType((ParameterizedType) type, srcType, declaringClass);
+   //通用数组类型
     } else if (type instanceof GenericArrayType) {
       return resolveGenericArrayType((GenericArrayType) type, srcType, declaringClass);
     } else {
       return type;
     }
   }
-
+  //解析通用数组类型
   private static Type resolveGenericArrayType(GenericArrayType genericArrayType, Type srcType, Class<?> declaringClass) {
     Type componentType = genericArrayType.getGenericComponentType();
     Type resolvedComponentType = null;
+    //类型变量
     if (componentType instanceof TypeVariable) {
       resolvedComponentType = resolveTypeVar((TypeVariable<?>) componentType, srcType, declaringClass);
+   //通用数组类型
     } else if (componentType instanceof GenericArrayType) {
       resolvedComponentType = resolveGenericArrayType((GenericArrayType) componentType, srcType, declaringClass);
+    //参数化类型
     } else if (componentType instanceof ParameterizedType) {
       resolvedComponentType = resolveParameterizedType((ParameterizedType) componentType, srcType, declaringClass);
-    }
+    }//属于类
     if (resolvedComponentType instanceof Class) {
       return Array.newInstance((Class<?>) resolvedComponentType, 0).getClass();
     } else {
+      //通用数组类型
       return new GenericArrayTypeImpl(resolvedComponentType);
     }
   }
-
+  //解析参数化类型
   private static ParameterizedType resolveParameterizedType(ParameterizedType parameterizedType, Type srcType, Class<?> declaringClass) {
     Class<?> rawType = (Class<?>) parameterizedType.getRawType();
     Type[] typeArgs = parameterizedType.getActualTypeArguments();
@@ -110,13 +121,13 @@ public class TypeParameterResolver {
     }
     return new ParameterizedTypeImpl(rawType, null, args);
   }
-
+  //解析通配符类型
   private static Type resolveWildcardType(WildcardType wildcardType, Type srcType, Class<?> declaringClass) {
     Type[] lowerBounds = resolveWildcardTypeBounds(wildcardType.getLowerBounds(), srcType, declaringClass);
     Type[] upperBounds = resolveWildcardTypeBounds(wildcardType.getUpperBounds(), srcType, declaringClass);
     return new WildcardTypeImpl(lowerBounds, upperBounds);
   }
-
+  //解析通配型类型
   private static Type[] resolveWildcardTypeBounds(Type[] bounds, Type srcType, Class<?> declaringClass) {
     Type[] result = new Type[bounds.length];
     for (int i = 0; i < bounds.length; i++) {
@@ -132,7 +143,7 @@ public class TypeParameterResolver {
     }
     return result;
   }
-
+  //解析类型变量
   private static Type resolveTypeVar(TypeVariable<?> typeVar, Type srcType, Class<?> declaringClass) {
     Type result;
     Class<?> clazz;
@@ -168,7 +179,7 @@ public class TypeParameterResolver {
     }
     return Object.class;
   }
-
+ //扫描父级类型
   private static Type scanSuperTypes(TypeVariable<?> typeVar, Type srcType, Class<?> declaringClass, Class<?> clazz, Type superclass) {
     if (superclass instanceof ParameterizedType) {
       ParameterizedType parentAsType = (ParameterizedType) superclass;
@@ -192,7 +203,7 @@ public class TypeParameterResolver {
     }
     return null;
   }
-
+  //翻译父级类型变量
   private static ParameterizedType translateParentTypeVars(ParameterizedType srcType, Class<?> srcClass, ParameterizedType parentType) {
     Type[] parentTypeArgs = parentType.getActualTypeArguments();
     Type[] srcTypeArgs = srcType.getActualTypeArguments();
@@ -213,35 +224,38 @@ public class TypeParameterResolver {
     }
     return noChange ? parentType : new ParameterizedTypeImpl((Class<?>)parentType.getRawType(), null, newParentArgs);
   }
-
+  //类型参数解析
   private TypeParameterResolver() {
     super();
   }
-
+  //参数化类型实现类
   static class ParameterizedTypeImpl implements ParameterizedType {
+    //原生类型
     private Class<?> rawType;
-
+    //拥有者类型
     private Type ownerType;
-
+    //实际类型参数集合
     private Type[] actualTypeArguments;
-
+    //构造器
     public ParameterizedTypeImpl(Class<?> rawType, Type ownerType, Type[] actualTypeArguments) {
       super();
       this.rawType = rawType;
       this.ownerType = ownerType;
       this.actualTypeArguments = actualTypeArguments;
     }
-
+    //获取实际类型参数
     @Override
     public Type[] getActualTypeArguments() {
       return actualTypeArguments;
     }
 
+    //获取拥有者类型
     @Override
     public Type getOwnerType() {
       return ownerType;
     }
 
+   //获取原生类型
     @Override
     public Type getRawType() {
       return rawType;
@@ -252,10 +266,11 @@ public class TypeParameterResolver {
       return "ParameterizedTypeImpl [rawType=" + rawType + ", ownerType=" + ownerType + ", actualTypeArguments=" + Arrays.toString(actualTypeArguments) + "]";
     }
   }
-
+  //通配符类型实现类
   static class WildcardTypeImpl implements WildcardType {
+    //下限
     private Type[] lowerBounds;
-
+    //上限
     private Type[] upperBounds;
 
     WildcardTypeImpl(Type[] lowerBounds, Type[] upperBounds) {
@@ -263,18 +278,20 @@ public class TypeParameterResolver {
       this.lowerBounds = lowerBounds;
       this.upperBounds = upperBounds;
     }
-
+    //获取下限类型
     @Override
     public Type[] getLowerBounds() {
       return lowerBounds;
     }
 
+    //获取上限类型
     @Override
     public Type[] getUpperBounds() {
       return upperBounds;
     }
   }
 
+  //通用数组类型实现类
   static class GenericArrayTypeImpl implements GenericArrayType {
     private Type genericComponentType;
 
@@ -283,6 +300,7 @@ public class TypeParameterResolver {
       this.genericComponentType = genericComponentType;
     }
 
+    //获取通用的组件类型
     @Override
     public Type getGenericComponentType() {
       return genericComponentType;

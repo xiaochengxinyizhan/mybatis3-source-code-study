@@ -23,6 +23,7 @@ import java.lang.annotation.Target;
 import org.apache.ibatis.mapping.FetchType;
 
 /**
+ * 指定嵌套检索集合的会话注解
  * The annotation that specify the nested statement for retrieving collections.
  *
  * @see Result
@@ -34,6 +35,7 @@ import org.apache.ibatis.mapping.FetchType;
 @Target({})
 public @interface Many {
   /**
+   * 返回检索集合的会话ID
    * Returns the statement id that retrieves collection.
    *
    * @return the statement id
@@ -41,6 +43,7 @@ public @interface Many {
   String select() default "";
 
   /**
+   * 返回嵌套会话的拉取策略
    * Returns the fetch strategy for nested statement.
    *
    * @return the fetch strategy

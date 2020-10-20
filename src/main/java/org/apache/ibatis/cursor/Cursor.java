@@ -25,20 +25,25 @@ import java.io.Closeable;
  *
  * @author Guillaume Darmont / guillaume@dropinocean.com
  */
+//游标继承Closeable接口，这个接口只有一个close方法需要实现，一般用于资源需要手动关闭情况，各种io流之类这里是结果集（ResultSet需要关闭，所以继承这个接口）
+//  继承Iterable接口，游标对结果集（ResultSet）进行遍历功能，需要实现一个迭代器的功能。
 public interface Cursor<T> extends Closeable, Iterable<T> {
 
   /**
+   * 如果cursor已经开始从数据库拉去游标项则返回true
    * @return true if the cursor has started to fetch items from database.
    */
   boolean isOpen();
 
   /**
-   *
+   *如果将匹配的查询数据已经全部返回，并消费完毕则返回true
    * @return true if the cursor is fully consumed and has returned all elements matching the query.
    */
   boolean isConsumed();
 
   /**
+   * 获取当前游标项的下标，第一个游标项下标为0
+   *  如果未检索到第一个游标项，则返回-1
    * Get the current item index. The first item has the index 0.
    * @return -1 if the first cursor item has not been retrieved. The index of the current item retrieved.
    */

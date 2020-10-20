@@ -17,24 +17,25 @@
 
 -->
 <!ELEMENT configuration (properties?, settings?, typeAliases?, typeHandlers?, objectFactory?, objectWrapperFactory?, reflectorFactory?, plugins?, environments?, databaseIdProvider?, mappers?)>
-
+<!--全局配置标签（属性，设置，别名，类型处理器，对象工厂，对象包装工厂，反射工厂，插件，环境，数据库ID服务，mapper接口） -->
 <!ELEMENT databaseIdProvider (property*)>
+<!-- 必添类型-->
 <!ATTLIST databaseIdProvider
 type CDATA #REQUIRED
 >
-
+<!-- 属性资源 -->
 <!ELEMENT properties (property*)>
 <!ATTLIST properties
 resource CDATA #IMPLIED
 url CDATA #IMPLIED
 >
-
+<!--属性不为空 -->
 <!ELEMENT property EMPTY>
 <!ATTLIST property
 name CDATA #REQUIRED
 value CDATA #REQUIRED
 >
-
+<!-- 设置不为空 -->
 <!ELEMENT settings (setting+)>
 
 <!ELEMENT setting EMPTY>
@@ -42,7 +43,7 @@ value CDATA #REQUIRED
 name CDATA #REQUIRED
 value CDATA #REQUIRED
 >
-
+<!--别名和包名不为空 -->
 <!ELEMENT typeAliases (typeAlias*,package*)>
 
 <!ELEMENT typeAlias EMPTY>
@@ -50,7 +51,7 @@ value CDATA #REQUIRED
 type CDATA #REQUIRED
 alias CDATA #IMPLIED
 >
-
+<!--类型处理器 -->
 <!ELEMENT typeHandlers (typeHandler*,package*)>
 
 <!ELEMENT typeHandler EMPTY>
@@ -59,29 +60,29 @@ javaType CDATA #IMPLIED
 jdbcType CDATA #IMPLIED
 handler CDATA #REQUIRED
 >
-
+<!-- 对象工厂 -->
 <!ELEMENT objectFactory (property*)>
 <!ATTLIST objectFactory
 type CDATA #REQUIRED
 >
-
+<!--对象包装工厂 -->
 <!ELEMENT objectWrapperFactory EMPTY>
 <!ATTLIST objectWrapperFactory
 type CDATA #REQUIRED
 >
-
+<!-- 反射工厂 -->
 <!ELEMENT reflectorFactory EMPTY>
 <!ATTLIST reflectorFactory
 type CDATA #REQUIRED
 >
-
+<!--插件-->
 <!ELEMENT plugins (plugin+)>
 
 <!ELEMENT plugin (property*)>
 <!ATTLIST plugin
 interceptor CDATA #REQUIRED
 >
-
+<!--环境 -->
 <!ELEMENT environments (environment+)>
 <!ATTLIST environments
 default CDATA #REQUIRED
@@ -91,17 +92,17 @@ default CDATA #REQUIRED
 <!ATTLIST environment
 id CDATA #REQUIRED
 >
-
+<!--事务 -->
 <!ELEMENT transactionManager (property*)>
 <!ATTLIST transactionManager
 type CDATA #REQUIRED
 >
-
+<!--数据源 -->
 <!ELEMENT dataSource (property*)>
 <!ATTLIST dataSource
 type CDATA #REQUIRED
 >
-
+<!--接口 -->
 <!ELEMENT mappers (mapper*,package*)>
 
 <!ELEMENT mapper EMPTY>

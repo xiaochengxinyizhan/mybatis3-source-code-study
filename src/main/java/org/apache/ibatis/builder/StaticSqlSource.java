@@ -23,24 +23,27 @@ import org.apache.ibatis.mapping.SqlSource;
 import org.apache.ibatis.session.Configuration;
 
 /**
+ * 静态的SQL源
  * @author Clinton Begin
  */
 public class StaticSqlSource implements SqlSource {
-
+  //sql
   private final String sql;
+  //参数映射集合
   private final List<ParameterMapping> parameterMappings;
+  //全局配置
   private final Configuration configuration;
-
+  //构造函数
   public StaticSqlSource(Configuration configuration, String sql) {
     this(configuration, sql, null);
   }
-
+  //构造函数
   public StaticSqlSource(Configuration configuration, String sql, List<ParameterMapping> parameterMappings) {
     this.sql = sql;
     this.parameterMappings = parameterMappings;
     this.configuration = configuration;
   }
-
+  //获取绑定参数的执行SQL
   @Override
   public BoundSql getBoundSql(Object parameterObject) {
     return new BoundSql(configuration, sql, parameterMappings, parameterObject);

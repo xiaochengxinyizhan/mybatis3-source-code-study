@@ -31,18 +31,20 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 /**
+ * xml包含的转换器
  * @author Frank D. Martinez [mnesarco]
  */
 public class XMLIncludeTransformer {
-
+   //全局配置
   private final Configuration configuration;
+  //mapper接口构建助手
   private final MapperBuilderAssistant builderAssistant;
-
+  //构造函数
   public XMLIncludeTransformer(Configuration configuration, MapperBuilderAssistant builderAssistant) {
     this.configuration = configuration;
     this.builderAssistant = builderAssistant;
   }
-
+  //应用节点包含的信息
   public void applyIncludes(Node source) {
     Properties variablesContext = new Properties();
     Properties configurationVariables = configuration.getVariables();
@@ -51,6 +53,7 @@ public class XMLIncludeTransformer {
   }
 
   /**
+   * 递归地通过所有SQL片段应用includes。
    * Recursively apply includes through all SQL fragments.
    * @param source Include node in DOM tree
    * @param variablesContext Current context for static variables with values
@@ -87,7 +90,7 @@ public class XMLIncludeTransformer {
       source.setNodeValue(PropertyParser.parse(source.getNodeValue(), variablesContext));
     }
   }
-
+   //找SQL的片段
   private Node findSqlFragment(String refid, Properties variables) {
     refid = PropertyParser.parse(refid, variables);
     refid = builderAssistant.applyCurrentNamespace(refid, true);
@@ -98,12 +101,13 @@ public class XMLIncludeTransformer {
       throw new IncompleteElementException("Could not find SQL statement to include with refid '" + refid + "'", e);
     }
   }
-
+  //获取节点的属性
   private String getStringAttribute(Node node, String name) {
     return node.getAttributes().getNamedItem(name).getNodeValue();
   }
 
   /**
+   * 读取占位符和他们的值从包含的节点定义中
    * Read placeholders and their values from include node definition.
    * @param node Include node instance
    * @param inheritedVariablesContext Current context used for replace variables in new variables values

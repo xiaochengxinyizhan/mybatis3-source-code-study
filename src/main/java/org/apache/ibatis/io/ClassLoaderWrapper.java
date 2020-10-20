@@ -19,15 +19,17 @@ import java.io.InputStream;
 import java.net.URL;
 
 /**
+ * 包装访问多个类加载器 使他们像一个工作
  * A class to wrap access to multiple class loaders making them work as one
  *
  * @author Clinton Begin
  */
 public class ClassLoaderWrapper {
-
+  //默认的类加载器
   ClassLoader defaultClassLoader;
+  //系统类加载器
   ClassLoader systemClassLoader;
-
+  //类加载器包装器构造
   ClassLoaderWrapper() {
     try {
       systemClassLoader = ClassLoader.getSystemClassLoader();
@@ -37,6 +39,7 @@ public class ClassLoaderWrapper {
   }
 
   /**
+   * 使用当前类路径获取一个资源作为URL
    * Get a resource as a URL using the current class path
    *
    * @param resource - the resource to locate
@@ -47,6 +50,7 @@ public class ClassLoaderWrapper {
   }
 
   /**
+   * 从类路径下获取资源，开始以一个指定的类加载器
    * Get a resource from the classpath, starting with a specific class loader
    *
    * @param resource    - the resource to find
@@ -58,6 +62,7 @@ public class ClassLoaderWrapper {
   }
 
   /**
+   * 从类路径下获取资源
    * Get a resource from the classpath
    *
    * @param resource - the resource to find
@@ -68,6 +73,7 @@ public class ClassLoaderWrapper {
   }
 
   /**
+   * 从类路径下获取资源，以指定的类加载器开始
    * Get a resource from the classpath, starting with a specific class loader
    *
    * @param resource    - the resource to find
@@ -79,6 +85,7 @@ public class ClassLoaderWrapper {
   }
 
   /**
+   * 找到类路径上的一个类 或者一直尝试
    * Find a class on the classpath (or die trying)
    *
    * @param name - the class to look for
@@ -90,6 +97,7 @@ public class ClassLoaderWrapper {
   }
 
   /**
+   * 找到类路径上的一个类，以指定类加载器开始的 或者一直尝试。
    * Find a class on the classpath, starting with a specific classloader (or die trying)
    *
    * @param name        - the class to look for
@@ -102,6 +110,7 @@ public class ClassLoaderWrapper {
   }
 
   /**
+   * 尝试从一组类加载器中获取资源
    * Try to get a resource from a group of classloaders
    *
    * @param resource    - the resource to get
@@ -111,10 +120,10 @@ public class ClassLoaderWrapper {
   InputStream getResourceAsStream(String resource, ClassLoader[] classLoader) {
     for (ClassLoader cl : classLoader) {
       if (null != cl) {
-
+        //尝试找到通过的资源
         // try to find the resource as passed
         InputStream returnValue = cl.getResourceAsStream(resource);
-
+        //现在 一些类加载器 想要头斜杠，因此 我们将添加它 并且尝试如果我们没找到资源
         // now, some class loaders want this leading "/", so we'll add it and try again if we didn't find the resource
         if (null == returnValue) {
           returnValue = cl.getResourceAsStream("/" + resource);
@@ -129,6 +138,7 @@ public class ClassLoaderWrapper {
   }
 
   /**
+   * 使用当前的类路径获取一个资源作为URL
    * Get a resource as a URL using the current class path
    *
    * @param resource    - the resource to locate
@@ -142,16 +152,16 @@ public class ClassLoaderWrapper {
     for (ClassLoader cl : classLoader) {
 
       if (null != cl) {
-
+        //寻找资源作为传入进来的
         // look for the resource as passed in...
         url = cl.getResource(resource);
-
+        //但是一些类加载器想要头部斜杠，因此我们将添加它，并且如果我们没找到资源再继续尝试。
         // ...but some class loaders want this leading "/", so we'll add it
         // and try again if we didn't find the resource
         if (null == url) {
           url = cl.getResource("/" + resource);
         }
-
+        //总是在最后的位置找到，所以就不需要继续寻找了，因此已经停止寻找
         // "It's always in the last place I look for it!"
         // ... because only an idiot would keep looking for it after finding it, so stop looking already.
         if (null != url) {
@@ -161,13 +171,14 @@ public class ClassLoaderWrapper {
       }
 
     }
-
+    //什么也没找到
     // didn't find it anywhere.
     return null;
 
   }
 
   /**
+   * 企图从一组类加载器中加载一个类
    * Attempt to load a class from a group of classloaders
    *
    * @param name        - the class to load
@@ -200,7 +211,7 @@ public class ClassLoaderWrapper {
     throw new ClassNotFoundException("Cannot find class: " + name);
 
   }
-
+  //获取类加载器
   ClassLoader[] getClassLoaders(ClassLoader classLoader) {
     return new ClassLoader[]{
         classLoader,

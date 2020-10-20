@@ -22,50 +22,51 @@ import org.slf4j.MarkerFactory;
 import org.slf4j.spi.LocationAwareLogger;
 
 /**
+ * 位置感知日志实现
  * @author Eduardo Macarron
  */
 class Slf4jLocationAwareLoggerImpl implements Log {
 
   private static final Marker MARKER = MarkerFactory.getMarker(LogFactory.MARKER);
-
+  //日志实现名
   private static final String FQCN = Slf4jImpl.class.getName();
-
+  //slf4j.spi.LocationAwareLogger
   private final LocationAwareLogger logger;
-
+  //构造器
   Slf4jLocationAwareLoggerImpl(LocationAwareLogger logger) {
     this.logger = logger;
   }
-
+  //是否开启debug
   @Override
   public boolean isDebugEnabled() {
     return logger.isDebugEnabled();
   }
-
+  //是否开启trace
   @Override
   public boolean isTraceEnabled() {
     return logger.isTraceEnabled();
   }
-
+  //输出错误信息
   @Override
   public void error(String s, Throwable e) {
     logger.log(MARKER, FQCN, LocationAwareLogger.ERROR_INT, s, null, e);
   }
-
+  //输出错误信息
   @Override
   public void error(String s) {
     logger.log(MARKER, FQCN, LocationAwareLogger.ERROR_INT, s, null, null);
   }
-
+  //输出debug信息
   @Override
   public void debug(String s) {
     logger.log(MARKER, FQCN, LocationAwareLogger.DEBUG_INT, s, null, null);
   }
-
+  //输出trace信息
   @Override
   public void trace(String s) {
     logger.log(MARKER, FQCN, LocationAwareLogger.TRACE_INT, s, null, null);
   }
-
+  //输出warn信息
   @Override
   public void warn(String s) {
     logger.log(MARKER, FQCN, LocationAwareLogger.WARN_INT, s, null, null);

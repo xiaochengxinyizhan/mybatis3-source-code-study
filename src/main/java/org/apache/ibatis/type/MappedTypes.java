@@ -22,8 +22,9 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * 这个注解指定map集合中的类型处理器：xxxTypeHandler
  * The annotation that specify java types to map {@link TypeHandler}.
- *
+ *使用方法
  * <p><br>
  * <b>How to use:</b>
  * <pre>
@@ -39,6 +40,7 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 public @interface MappedTypes {
   /**
+   * 返回map中的类型处理器
    * Returns java types to map {@link TypeHandler}.
    *
    * @return java types

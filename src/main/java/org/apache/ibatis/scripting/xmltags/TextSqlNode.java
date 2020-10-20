@@ -23,49 +23,53 @@ import org.apache.ibatis.scripting.ScriptingException;
 import org.apache.ibatis.type.SimpleTypeRegistry;
 
 /**
+ * 文件sql节点
  * @author Clinton Begin
  */
 public class TextSqlNode implements SqlNode {
+  //文本
   private final String text;
+  //注入过滤器
   private final Pattern injectionFilter;
-
+  //构造函数
   public TextSqlNode(String text) {
     this(text, null);
   }
-
+  //构造函数
   public TextSqlNode(String text, Pattern injectionFilter) {
     this.text = text;
     this.injectionFilter = injectionFilter;
   }
-
+  //是否是动态的
   public boolean isDynamic() {
     DynamicCheckerTokenParser checker = new DynamicCheckerTokenParser();
     GenericTokenParser parser = createParser(checker);
     parser.parse(text);
     return checker.isDynamic();
   }
-
+  //应用动态上下文
   @Override
   public boolean apply(DynamicContext context) {
     GenericTokenParser parser = createParser(new BindingTokenParser(context, injectionFilter));
     context.appendSql(parser.parse(text));
     return true;
   }
-
+  //解决$注入的问题
   private GenericTokenParser createParser(TokenHandler handler) {
     return new GenericTokenParser("${", "}", handler);
   }
-
+  //静态内部类绑定token解析
   private static class BindingTokenParser implements TokenHandler {
-
+    //动态上下文
     private DynamicContext context;
+    //注入过滤器
     private Pattern injectionFilter;
 
     public BindingTokenParser(DynamicContext context, Pattern injectionFilter) {
       this.context = context;
       this.injectionFilter = injectionFilter;
     }
-
+   //处理token
     @Override
     public String handleToken(String content) {
       Object parameter = context.getBindings().get("_parameter");
@@ -79,26 +83,26 @@ public class TextSqlNode implements SqlNode {
       checkInjection(srtValue);
       return srtValue;
     }
-
+    //检查注入
     private void checkInjection(String value) {
       if (injectionFilter != null && !injectionFilter.matcher(value).matches()) {
         throw new ScriptingException("Invalid input. Please conform to regex" + injectionFilter.pattern());
       }
     }
   }
-
+  //动态检查token解析
   private static class DynamicCheckerTokenParser implements TokenHandler {
-
+   //是否是动态的
     private boolean isDynamic;
 
     public DynamicCheckerTokenParser() {
       // Prevent Synthetic Access
     }
-
+    //是否是动态的
     public boolean isDynamic() {
       return isDynamic;
     }
-
+    //处理token
     @Override
     public String handleToken(String content) {
       this.isDynamic = true;

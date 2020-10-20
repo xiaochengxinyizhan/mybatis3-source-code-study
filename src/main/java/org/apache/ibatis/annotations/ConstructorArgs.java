@@ -22,6 +22,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * 构造器的组映射定义注解
  * The annotation that be grouping mapping definitions for constructor.
  *
  * <p><br>
@@ -44,6 +45,7 @@ import java.lang.annotation.Target;
 @Target(ElementType.METHOD)
 public @interface ConstructorArgs {
   /**
+   * 返回构造器的映射定义
    * Returns mapping definitions for constructor.
    *
    * @return mapping definitions

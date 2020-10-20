@@ -18,24 +18,25 @@ package org.apache.ibatis.scripting;
 import org.apache.ibatis.exceptions.PersistenceException;
 
 /**
+ * 脚本异常
  * @author Frank D. Martinez [mnesarco]
  */
 public class ScriptingException extends PersistenceException {
 
   private static final long serialVersionUID = 7642570221267566591L;
-
+  //空构造函数
   public ScriptingException() {
     super();
   }
-
+  //传递信息的构造函数
   public ScriptingException(String message) {
     super(message);
   }
-
+  //传递信息和throwable的构造函数
   public ScriptingException(String message, Throwable cause) {
     super(message, cause);
   }
-
+  //传递throwable的构造函数
   public ScriptingException(Throwable cause) {
     super(cause);
   }

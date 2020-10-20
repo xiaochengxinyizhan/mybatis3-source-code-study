@@ -25,21 +25,27 @@ import java.util.StringTokenizer;
 import org.apache.ibatis.session.Configuration;
 
 /**
+ *修正Sql节点
  * @author Clinton Begin
  */
 public class TrimSqlNode implements SqlNode {
-
+  //sql节点
   private final SqlNode contents;
+  //前缀
   private final String prefix;
+  //后缀
   private final String suffix;
+  //前缀被重写
   private final List<String> prefixesToOverride;
+  //后缀被重写
   private final List<String> suffixesToOverride;
+  //全局配置
   private final Configuration configuration;
-
+  //构造函数
   public TrimSqlNode(Configuration configuration, SqlNode contents, String prefix, String prefixesToOverride, String suffix, String suffixesToOverride) {
     this(configuration, contents, prefix, parseOverrides(prefixesToOverride), suffix, parseOverrides(suffixesToOverride));
   }
-
+  //构造函数
   protected TrimSqlNode(Configuration configuration, SqlNode contents, String prefix, List<String> prefixesToOverride, String suffix, List<String> suffixesToOverride) {
     this.contents = contents;
     this.prefix = prefix;
@@ -48,7 +54,7 @@ public class TrimSqlNode implements SqlNode {
     this.suffixesToOverride = suffixesToOverride;
     this.configuration = configuration;
   }
-
+  //是否应用动态上下文
   @Override
   public boolean apply(DynamicContext context) {
     FilteredDynamicContext filteredDynamicContext = new FilteredDynamicContext(context);
@@ -56,7 +62,7 @@ public class TrimSqlNode implements SqlNode {
     filteredDynamicContext.applyAll();
     return result;
   }
-
+  //解析重写
   private static List<String> parseOverrides(String overrides) {
     if (overrides != null) {
       final StringTokenizer parser = new StringTokenizer(overrides, "|", false);
@@ -68,13 +74,17 @@ public class TrimSqlNode implements SqlNode {
     }
     return Collections.emptyList();
   }
-
+//过滤后的动态上下文
   private class FilteredDynamicContext extends DynamicContext {
+    //动态上下文
     private DynamicContext delegate;
+    //是否是被应用前缀
     private boolean prefixApplied;
+    //是否被应用后缀
     private boolean suffixApplied;
+    //sql的缓存
     private StringBuilder sqlBuffer;
-
+    //过滤后的动态上下文
     public FilteredDynamicContext(DynamicContext delegate) {
       super(configuration, null);
       this.delegate = delegate;
@@ -82,7 +92,7 @@ public class TrimSqlNode implements SqlNode {
       this.suffixApplied = false;
       this.sqlBuffer = new StringBuilder();
     }
-
+    //应用所有
     public void applyAll() {
       sqlBuffer = new StringBuilder(sqlBuffer.toString().trim());
       String trimmedUppercaseSql = sqlBuffer.toString().toUpperCase(Locale.ENGLISH);
@@ -92,32 +102,32 @@ public class TrimSqlNode implements SqlNode {
       }
       delegate.appendSql(sqlBuffer.toString());
     }
-
+    //获取绑定
     @Override
     public Map<String, Object> getBindings() {
       return delegate.getBindings();
     }
-
+    //绑定名字和值对应
     @Override
     public void bind(String name, Object value) {
       delegate.bind(name, value);
     }
-
+    //获取唯一的数值
     @Override
     public int getUniqueNumber() {
       return delegate.getUniqueNumber();
     }
-
+   //追加SQL
     @Override
     public void appendSql(String sql) {
       sqlBuffer.append(sql);
     }
-
+    //获取SQL
     @Override
     public String getSql() {
       return delegate.getSql();
     }
-
+   //应用前缀
     private void applyPrefix(StringBuilder sql, String trimmedUppercaseSql) {
       if (!prefixApplied) {
         prefixApplied = true;
@@ -135,7 +145,7 @@ public class TrimSqlNode implements SqlNode {
         }
       }
     }
-
+   //应用后缀
     private void applySuffix(StringBuilder sql, String trimmedUppercaseSql) {
       if (!suffixApplied) {
         suffixApplied = true;

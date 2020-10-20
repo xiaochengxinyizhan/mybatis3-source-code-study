@@ -18,6 +18,7 @@ package org.apache.ibatis.builder;
 import java.util.HashMap;
 
 /**
+ *内联参数表达式分析器。支持的语法（简体）：
  * Inline parameter expression parser. Supported grammar (simplified):
  *
  * <pre>
@@ -34,11 +35,11 @@ import java.util.HashMap;
 public class ParameterExpression extends HashMap<String, String> {
 
   private static final long serialVersionUID = -2417552199605158680L;
-
+  //构造函数
   public ParameterExpression(String expression) {
     parse(expression);
   }
-
+  //解析表达式
   private void parse(String expression) {
     int p = skipWS(expression, 0);
     if (expression.charAt(p) == '(') {
@@ -47,7 +48,7 @@ public class ParameterExpression extends HashMap<String, String> {
       property(expression, p);
     }
   }
-
+  //解析表达式
   private void expression(String expression, int left) {
     int match = 1;
     int right = left + 1;
@@ -62,7 +63,7 @@ public class ParameterExpression extends HashMap<String, String> {
     put("expression", expression.substring(left, right - 1));
     jdbcTypeOpt(expression, right);
   }
-
+  //属性表达式
   private void property(String expression, int left) {
     if (left < expression.length()) {
       int right = skipUntil(expression, left, ",:");
@@ -70,7 +71,7 @@ public class ParameterExpression extends HashMap<String, String> {
       jdbcTypeOpt(expression, right);
     }
   }
-
+  //跳过
   private int skipWS(String expression, int p) {
     for (int i = p; i < expression.length(); i++) {
       if (expression.charAt(i) > 0x20) {
@@ -79,7 +80,7 @@ public class ParameterExpression extends HashMap<String, String> {
     }
     return expression.length();
   }
-
+ //跳过
   private int skipUntil(String expression, int p, final String endChars) {
     for (int i = p; i < expression.length(); i++) {
       char c = expression.charAt(i);
@@ -89,7 +90,7 @@ public class ParameterExpression extends HashMap<String, String> {
     }
     return expression.length();
   }
-
+  //
   private void jdbcTypeOpt(String expression, int p) {
     p = skipWS(expression, p);
     if (p < expression.length()) {
@@ -113,7 +114,7 @@ public class ParameterExpression extends HashMap<String, String> {
     }
     option(expression, right + 1);
   }
-
+  //可选
   private void option(String expression, int p) {
     int left = skipWS(expression, p);
     if (left < expression.length()) {
@@ -126,7 +127,7 @@ public class ParameterExpression extends HashMap<String, String> {
       option(expression, right + 1);
     }
   }
-
+  //被修正的string
   private String trimmedStr(String str, int start, int end) {
     while (str.charAt(start) <= 0x20) {
       start++;

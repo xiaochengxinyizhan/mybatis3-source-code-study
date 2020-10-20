@@ -18,24 +18,25 @@ package org.apache.ibatis.executor;
 import org.apache.ibatis.exceptions.PersistenceException;
 
 /**
+ * 执行器异常依然是继承了运行期异常
  * @author Clinton Begin
  */
 public class ExecutorException extends PersistenceException {
 
   private static final long serialVersionUID = 4060977051977364820L;
-
+  //空构造函数
   public ExecutorException() {
     super();
   }
-
+  //传递信息构造函数
   public ExecutorException(String message) {
     super(message);
   }
-
+  //传递信息和throwable构造函数
   public ExecutorException(String message, Throwable cause) {
     super(message, cause);
   }
-
+  //传递throwable构造函数
   public ExecutorException(Throwable cause) {
     super(cause);
   }

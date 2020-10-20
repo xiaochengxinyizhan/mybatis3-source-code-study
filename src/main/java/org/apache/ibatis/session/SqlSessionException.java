@@ -18,24 +18,25 @@ package org.apache.ibatis.session;
 import org.apache.ibatis.exceptions.PersistenceException;
 
 /**
+ * SQlSession异常继承运行期异常
  * @author Clinton Begin
  */
 public class SqlSessionException extends PersistenceException {
 
   private static final long serialVersionUID = 3833184690240265047L;
-
+  //空构造函数
   public SqlSessionException() {
     super();
   }
-
+  //传递信息的构造函数
   public SqlSessionException(String message) {
     super(message);
   }
-
+  //传递信息和throwable的构造函数
   public SqlSessionException(String message, Throwable cause) {
     super(message, cause);
   }
-
+  //传递throwable的构造函数
   public SqlSessionException(Throwable cause) {
     super(cause);
   }

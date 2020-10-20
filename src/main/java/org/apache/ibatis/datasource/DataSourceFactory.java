@@ -19,12 +19,20 @@ import java.util.Properties;
 import javax.sql.DataSource;
 
 /**
+ * 数据源工厂--叫工厂的一般符合工厂模式
  * @author Clinton Begin
  */
 public interface DataSourceFactory {
-
+  /**
+   * 设置属性文件
+   * @param props
+   */
   void setProperties(Properties props);
 
+  /**
+   * 获取数据源
+   * @return
+   */
   DataSource getDataSource();
 
 }

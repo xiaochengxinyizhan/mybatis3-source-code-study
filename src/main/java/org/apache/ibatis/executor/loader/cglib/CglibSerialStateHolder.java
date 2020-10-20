@@ -23,15 +23,16 @@ import org.apache.ibatis.executor.loader.ResultLoaderMap;
 import org.apache.ibatis.reflection.factory.ObjectFactory;
 
 /**
+ * Cglib序列化状态持有器
  * @author Eduardo Macarron
  */
 class CglibSerialStateHolder extends AbstractSerialStateHolder {
 
   private static final long serialVersionUID = 8940388717901644661L;
-
+  //空构造函数
   public CglibSerialStateHolder() {
   }
-
+  //有参构造器
   public CglibSerialStateHolder(
           final Object userBean,
           final Map<String, ResultLoaderMap.LoadPair> unloadedProperties,
@@ -40,7 +41,7 @@ class CglibSerialStateHolder extends AbstractSerialStateHolder {
           List<Object> constructorArgs) {
     super(userBean, unloadedProperties, objectFactory, constructorArgTypes, constructorArgs);
   }
-
+  //创建反序列化代理
   @Override
   protected Object createDeserializationProxy(Object target, Map<String, ResultLoaderMap.LoadPair> unloadedProperties, ObjectFactory objectFactory,
           List<Class<?>> constructorArgTypes, List<Object> constructorArgs) {

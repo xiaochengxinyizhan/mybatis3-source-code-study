@@ -54,4 +54,8 @@ public interface AuthorMapper {
 
   int updateAuthor(Author author);
 
+
+  int updateAuthor(String extra,Author author);
+
+
 }

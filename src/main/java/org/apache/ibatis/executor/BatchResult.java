@@ -21,53 +21,56 @@ import java.util.List;
 import org.apache.ibatis.mapping.MappedStatement;
 
 /**
+ * 批量结果
  * @author Jeff Butler
  */
 public class BatchResult {
-
+  //会话映射
   private final MappedStatement mappedStatement;
+  //sql
   private final String sql;
+  //参数对象集合
   private final List<Object> parameterObjects;
-
+  //操作行数
   private int[] updateCounts;
-
+  //构造器
   public BatchResult(MappedStatement mappedStatement, String sql) {
     super();
     this.mappedStatement = mappedStatement;
     this.sql = sql;
     this.parameterObjects = new ArrayList<>();
   }
-
+ //构造器
   public BatchResult(MappedStatement mappedStatement, String sql, Object parameterObject) {
     this(mappedStatement, sql);
     addParameterObject(parameterObject);
   }
-
+  //获取映射会话
   public MappedStatement getMappedStatement() {
     return mappedStatement;
   }
-
+  //获取sql
   public String getSql() {
     return sql;
   }
-
+  //获取参数对象
   @Deprecated
   public Object getParameterObject() {
     return parameterObjects.get(0);
   }
-
+  //获取参数对象
   public List<Object> getParameterObjects() {
     return parameterObjects;
   }
-
+  //获取更新行数
   public int[] getUpdateCounts() {
     return updateCounts;
   }
-
+  //设置更行行数
   public void setUpdateCounts(int[] updateCounts) {
     this.updateCounts = updateCounts;
   }
-
+  //添加参数对象
   public void addParameterObject(Object parameterObject) {
     this.parameterObjects.add(parameterObject);
   }

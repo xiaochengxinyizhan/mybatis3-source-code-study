@@ -16,10 +16,11 @@
 package org.apache.ibatis.jdbc;
 
 /**
+ * SQL类
  * @author Clinton Begin
  */
 public class SQL extends AbstractSQL<SQL> {
-
+ //重写父类getSelf()函数获取本身对象
   @Override
   public SQL getSelf() {
     return this;

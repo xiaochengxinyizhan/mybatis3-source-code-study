@@ -21,22 +21,24 @@ import org.apache.ibatis.executor.Executor;
 import org.apache.ibatis.mapping.MappedStatement;
 
 /**
+ * 咩有主键生成
  * @author Clinton Begin
  * @author Kazuki Shimizu
  */
 public class NoKeyGenerator implements KeyGenerator {
 
   /**
+   * 共享实例
    * A shared instance.
    * @since 3.4.3
    */
   public static final NoKeyGenerator INSTANCE = new NoKeyGenerator();
-
+  //执行前，什么也不做
   @Override
   public void processBefore(Executor executor, MappedStatement ms, Statement stmt, Object parameter) {
     // Do Nothing
   }
-
+  //执行后什么也不做
   @Override
   public void processAfter(Executor executor, MappedStatement ms, Statement stmt, Object parameter) {
     // Do Nothing

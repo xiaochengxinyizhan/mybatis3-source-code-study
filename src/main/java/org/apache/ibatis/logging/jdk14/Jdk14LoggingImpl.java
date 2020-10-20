@@ -21,46 +21,47 @@ import java.util.logging.Logger;
 import org.apache.ibatis.logging.Log;
 
 /**
+ * jdk14日志实现类
  * @author Clinton Begin
  */
 public class Jdk14LoggingImpl implements Log {
 
   private final Logger log;
-
+  //构造器
   public Jdk14LoggingImpl(String clazz) {
     log = Logger.getLogger(clazz);
   }
-
+  //是否开启debug形式
   @Override
   public boolean isDebugEnabled() {
     return log.isLoggable(Level.FINE);
   }
-
+  //是否开启trace模式
   @Override
   public boolean isTraceEnabled() {
     return log.isLoggable(Level.FINER);
   }
-
+  //输出错误信息
   @Override
   public void error(String s, Throwable e) {
     log.log(Level.SEVERE, s, e);
   }
-
+  //输出错误信息
   @Override
   public void error(String s) {
     log.log(Level.SEVERE, s);
   }
-
+  //输出debug信息
   @Override
   public void debug(String s) {
     log.log(Level.FINE, s);
   }
-
+  //输出trace信息
   @Override
   public void trace(String s) {
     log.log(Level.FINER, s);
   }
-
+  //输出warn信息
   @Override
   public void warn(String s) {
     log.log(Level.WARNING, s);

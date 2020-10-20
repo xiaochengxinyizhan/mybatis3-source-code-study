@@ -21,10 +21,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
+ * 枚举类型处理器
  * @author Clinton Begin
  */
 public class EnumTypeHandler<E extends Enum<E>> extends BaseTypeHandler<E> {
-
+  //不可变的class类型
   private final Class<E> type;
 
   public EnumTypeHandler(Class<E> type) {
@@ -34,6 +35,14 @@ public class EnumTypeHandler<E extends Enum<E>> extends BaseTypeHandler<E> {
     this.type = type;
   }
 
+  /**
+   * 实现抽象父类 的设置可空参数
+   * @param ps
+   * @param i
+   * @param parameter
+   * @param jdbcType
+   * @throws SQLException
+   */
   @Override
   public void setNonNullParameter(PreparedStatement ps, int i, E parameter, JdbcType jdbcType) throws SQLException {
     if (jdbcType == null) {
@@ -43,18 +52,39 @@ public class EnumTypeHandler<E extends Enum<E>> extends BaseTypeHandler<E> {
     }
   }
 
+  /**
+   * 获取可空结果
+   * @param rs
+   * @param columnName Colunm name, when configuration <code>useColumnLabel</code> is <code>false</code>
+   * @return
+   * @throws SQLException
+   */
   @Override
   public E getNullableResult(ResultSet rs, String columnName) throws SQLException {
     String s = rs.getString(columnName);
     return s == null ? null : Enum.valueOf(type, s);
   }
 
+  /**
+   * 获取可空结果
+   * @param rs
+   * @param columnIndex
+   * @return
+   * @throws SQLException
+   */
   @Override
   public E getNullableResult(ResultSet rs, int columnIndex) throws SQLException {
     String s = rs.getString(columnIndex);
     return s == null ? null : Enum.valueOf(type, s);
   }
 
+  /**
+   * 获取可空结果
+   * @param cs
+   * @param columnIndex
+   * @return
+   * @throws SQLException
+   */
   @Override
   public E getNullableResult(CallableStatement cs, int columnIndex) throws SQLException {
     String s = cs.getString(columnIndex);

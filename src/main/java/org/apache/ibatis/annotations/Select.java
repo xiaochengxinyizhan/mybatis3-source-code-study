@@ -22,6 +22,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * 指定检索记录的SQL注解
  * The annotation that specify an SQL for retrieving record(s).
  *
  * <p><br>
@@ -39,6 +40,7 @@ import java.lang.annotation.Target;
 @Target(ElementType.METHOD)
 public @interface Select {
   /**
+   * 返回检索记录的SQL
    * Returns an SQL for retrieving record(s).
    *
    * @return an SQL for retrieving record(s)

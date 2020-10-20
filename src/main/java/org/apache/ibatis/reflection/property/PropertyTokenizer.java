@@ -18,14 +18,19 @@ package org.apache.ibatis.reflection.property;
 import java.util.Iterator;
 
 /**
+ * 属性标记器
  * @author Clinton Begin
  */
 public class PropertyTokenizer implements Iterator<PropertyTokenizer> {
+  //名称
   private String name;
+  //索引名称
   private final String indexedName;
+  //索引
   private String index;
+  //子属性
   private final String children;
-
+  //根据完整的全名称构造器
   public PropertyTokenizer(String fullname) {
     int delim = fullname.indexOf('.');
     if (delim > -1) {
@@ -42,33 +47,33 @@ public class PropertyTokenizer implements Iterator<PropertyTokenizer> {
       name = name.substring(0, delim);
     }
   }
-
+  //获取名称
   public String getName() {
     return name;
   }
-
+  //获取索引
   public String getIndex() {
     return index;
   }
-
+  //获取索引名称
   public String getIndexedName() {
     return indexedName;
   }
-
+  //获取子名称
   public String getChildren() {
     return children;
   }
-
+  //是否还有下一个属性
   @Override
   public boolean hasNext() {
     return children != null;
   }
-
+  //遍历下一个属性
   @Override
   public PropertyTokenizer next() {
     return new PropertyTokenizer(children);
   }
-
+  //移除能力没有
   @Override
   public void remove() {
     throw new UnsupportedOperationException("Remove is not supported, as it has no meaning in the context of properties.");

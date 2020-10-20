@@ -25,6 +25,7 @@ import org.apache.ibatis.session.TransactionIsolationLevel;
 import org.apache.ibatis.transaction.Transaction;
 
 /**
+ * 事务允许容器管理整个事务生命周期，延迟链接获取 直到getConnection()函数被调用。忽略所有提交或者回滚请求。默认关闭链接，但是可以被配置默认不关闭链接
  * {@link Transaction} that lets the container manage the full lifecycle of the transaction.
  * Delays connection retrieval until getConnection() is called.
  * Ignores all commit or rollback requests.
@@ -35,25 +36,28 @@ import org.apache.ibatis.transaction.Transaction;
  * @see ManagedTransactionFactory
  */
 public class ManagedTransaction implements Transaction {
-
+  //日志
   private static final Log log = LogFactory.getLog(ManagedTransaction.class);
-
+  //数据源
   private DataSource dataSource;
+  //事务隔离级别
   private TransactionIsolationLevel level;
+  //链接
   private Connection connection;
+  //是否关闭链接
   private final boolean closeConnection;
-
+  //被管理事务构造器
   public ManagedTransaction(Connection connection, boolean closeConnection) {
     this.connection = connection;
     this.closeConnection = closeConnection;
   }
-
+  //被管理事务构造器
   public ManagedTransaction(DataSource ds, TransactionIsolationLevel level, boolean closeConnection) {
     this.dataSource = ds;
     this.level = level;
     this.closeConnection = closeConnection;
   }
-
+  //获取链接
   @Override
   public Connection getConnection() throws SQLException {
     if (this.connection == null) {
@@ -61,17 +65,17 @@ public class ManagedTransaction implements Transaction {
     }
     return this.connection;
   }
-
+  //提交操作，什么也没做
   @Override
   public void commit() throws SQLException {
     // Does nothing
   }
-
+  //回滚操作，什么也没做
   @Override
   public void rollback() throws SQLException {
     // Does nothing
   }
-
+  //关闭链接
   @Override
   public void close() throws SQLException {
     if (this.closeConnection && this.connection != null) {
@@ -81,7 +85,7 @@ public class ManagedTransaction implements Transaction {
       this.connection.close();
     }
   }
-
+  //打开链接，数据源获取链接，事务隔离级别部位空 设置事务隔离级别
   protected void openConnection() throws SQLException {
     if (log.isDebugEnabled()) {
       log.debug("Opening JDBC Connection");
@@ -91,7 +95,7 @@ public class ManagedTransaction implements Transaction {
       this.connection.setTransactionIsolation(this.level.getLevel());
     }
   }
-
+  //获取超时时间，没有超时
   @Override
   public Integer getTimeout() throws SQLException {
     return null;

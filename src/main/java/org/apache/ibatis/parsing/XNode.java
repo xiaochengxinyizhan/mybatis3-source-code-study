@@ -27,17 +27,23 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 /**
+ * XNode
  * @author Clinton Begin
  */
 public class XNode {
-
+//w3c.dom.Node
   private final Node node;
+  //名字
   private final String name;
+  //body
   private final String body;
+  //属性
   private final Properties attributes;
+  //变量
   private final Properties variables;
+  //XPathParser解析器
   private final XPathParser xpathParser;
-
+  //构造函数
   public XNode(XPathParser xpathParser, Node node, Properties variables) {
     this.xpathParser = xpathParser;
     this.node = node;
@@ -46,11 +52,11 @@ public class XNode {
     this.attributes = parseAttributes(node);
     this.body = parseBody(node);
   }
-
+  //下一个节点
   public XNode newXNode(Node node) {
     return new XNode(xpathParser, node, variables);
   }
-
+  //获取父节点
   public XNode getParent() {
     Node parent = node.getParentNode();
     if (!(parent instanceof Element)) {
@@ -59,7 +65,7 @@ public class XNode {
       return new XNode(xpathParser, parent, variables);
     }
   }
-
+  //获取路径
   public String getPath() {
     StringBuilder builder = new StringBuilder();
     Node current = node;
@@ -72,7 +78,7 @@ public class XNode {
     }
     return builder.toString();
   }
-
+  //获取基于指定的值
   public String getValueBasedIdentifier() {
     StringBuilder builder = new StringBuilder();
     XNode current = this;
@@ -95,39 +101,39 @@ public class XNode {
     }
     return builder.toString();
   }
-
+  //校验正则值
   public String evalString(String expression) {
     return xpathParser.evalString(node, expression);
   }
-
+  //校验boolean值
   public Boolean evalBoolean(String expression) {
     return xpathParser.evalBoolean(node, expression);
   }
-
+  //校验double值
   public Double evalDouble(String expression) {
     return xpathParser.evalDouble(node, expression);
   }
-
+  //获取XNode集合
   public List<XNode> evalNodes(String expression) {
     return xpathParser.evalNodes(node, expression);
   }
-
+  //获取XNode
   public XNode evalNode(String expression) {
     return xpathParser.evalNode(node, expression);
   }
-
+  //获取node节点
   public Node getNode() {
     return node;
   }
-
+  //获取名字
   public String getName() {
     return name;
   }
-
+   //获取string体
   public String getStringBody() {
     return getStringBody(null);
   }
-
+  //获取string体
   public String getStringBody(String def) {
     if (body == null) {
       return def;
@@ -135,11 +141,11 @@ public class XNode {
       return body;
     }
   }
-
+  //获取布尔体
   public Boolean getBooleanBody() {
     return getBooleanBody(null);
   }
-
+  //获取布尔体
   public Boolean getBooleanBody(Boolean def) {
     if (body == null) {
       return def;
@@ -147,11 +153,11 @@ public class XNode {
       return Boolean.valueOf(body);
     }
   }
-
+  //获取int体
   public Integer getIntBody() {
     return getIntBody(null);
   }
-
+  //获取int体
   public Integer getIntBody(Integer def) {
     if (body == null) {
       return def;
@@ -159,11 +165,11 @@ public class XNode {
       return Integer.parseInt(body);
     }
   }
-
+  //获取long体
   public Long getLongBody() {
     return getLongBody(null);
   }
-
+  //获取long体
   public Long getLongBody(Long def) {
     if (body == null) {
       return def;
@@ -171,11 +177,11 @@ public class XNode {
       return Long.parseLong(body);
     }
   }
-
+  //获取double体
   public Double getDoubleBody() {
     return getDoubleBody(null);
   }
-
+  //获取double体
   public Double getDoubleBody(Double def) {
     if (body == null) {
       return def;
@@ -183,11 +189,11 @@ public class XNode {
       return Double.parseDouble(body);
     }
   }
-
+  //获取float体
   public Float getFloatBody() {
     return getFloatBody(null);
   }
-
+  //获取float体
   public Float getFloatBody(Float def) {
     if (body == null) {
       return def;
@@ -195,11 +201,11 @@ public class XNode {
       return Float.parseFloat(body);
     }
   }
-
+  //获取枚举属性
   public <T extends Enum<T>> T getEnumAttribute(Class<T> enumType, String name) {
     return getEnumAttribute(enumType, name, null);
   }
-
+  //获取枚举属性
   public <T extends Enum<T>> T getEnumAttribute(Class<T> enumType, String name, T def) {
     String value = getStringAttribute(name);
     if (value == null) {
@@ -208,11 +214,11 @@ public class XNode {
       return Enum.valueOf(enumType, value);
     }
   }
-
+  //获取string属性
   public String getStringAttribute(String name) {
     return getStringAttribute(name, null);
   }
-
+  //获取string属性
   public String getStringAttribute(String name, String def) {
     String value = attributes.getProperty(name);
     if (value == null) {
@@ -221,11 +227,11 @@ public class XNode {
       return value;
     }
   }
-
+  //获取布尔属性
   public Boolean getBooleanAttribute(String name) {
     return getBooleanAttribute(name, null);
   }
-
+  //获取布尔属性
   public Boolean getBooleanAttribute(String name, Boolean def) {
     String value = attributes.getProperty(name);
     if (value == null) {
@@ -234,11 +240,11 @@ public class XNode {
       return Boolean.valueOf(value);
     }
   }
-
+  //获取int属性
   public Integer getIntAttribute(String name) {
     return getIntAttribute(name, null);
   }
-
+  //获取int属性
   public Integer getIntAttribute(String name, Integer def) {
     String value = attributes.getProperty(name);
     if (value == null) {
@@ -247,11 +253,11 @@ public class XNode {
       return Integer.parseInt(value);
     }
   }
-
+  //获取long属性
   public Long getLongAttribute(String name) {
     return getLongAttribute(name, null);
   }
-
+  //获取long属性
   public Long getLongAttribute(String name, Long def) {
     String value = attributes.getProperty(name);
     if (value == null) {
@@ -260,11 +266,11 @@ public class XNode {
       return Long.parseLong(value);
     }
   }
-
+  //获取double属性
   public Double getDoubleAttribute(String name) {
     return getDoubleAttribute(name, null);
   }
-
+  //获取double属性
   public Double getDoubleAttribute(String name, Double def) {
     String value = attributes.getProperty(name);
     if (value == null) {
@@ -273,11 +279,11 @@ public class XNode {
       return Double.parseDouble(value);
     }
   }
-
+  //获取float属性
   public Float getFloatAttribute(String name) {
     return getFloatAttribute(name, null);
   }
-
+  //获取float属性
   public Float getFloatAttribute(String name, Float def) {
     String value = attributes.getProperty(name);
     if (value == null) {
@@ -286,7 +292,7 @@ public class XNode {
       return Float.parseFloat(value);
     }
   }
-
+  //获取子集
   public List<XNode> getChildren() {
     List<XNode> children = new ArrayList<>();
     NodeList nodeList = node.getChildNodes();
@@ -300,7 +306,7 @@ public class XNode {
     }
     return children;
   }
-
+  //获取子集作为属性
   public Properties getChildrenAsProperties() {
     Properties properties = new Properties();
     for (XNode child : getChildren()) {
@@ -353,13 +359,13 @@ public class XNode {
     }
     builder.append("\n");
   }
-
+  //缩进
   private void indent(StringBuilder builder, int level) {
     for (int i = 0; i < level; i++) {
       builder.append("    ");
     }
   }
-
+  //解析Node属性
   private Properties parseAttributes(Node n) {
     Properties attributes = new Properties();
     NamedNodeMap attributeNodes = n.getAttributes();
@@ -372,7 +378,7 @@ public class XNode {
     }
     return attributes;
   }
-
+  //解析body体
   private String parseBody(Node node) {
     String data = getBodyData(node);
     if (data == null) {
@@ -387,7 +393,7 @@ public class XNode {
     }
     return data;
   }
-
+  //获取Node节点
   private String getBodyData(Node child) {
     if (child.getNodeType() == Node.CDATA_SECTION_NODE
         || child.getNodeType() == Node.TEXT_NODE) {

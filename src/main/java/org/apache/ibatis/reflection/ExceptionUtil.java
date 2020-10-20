@@ -19,14 +19,15 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.UndeclaredThrowableException;
 
 /**
+ * 异常工具类
  * @author Clinton Begin
  */
 public class ExceptionUtil {
-
+  //防止实例化
   private ExceptionUtil() {
     // Prevent Instantiation
   }
-
+  //未包装的异常抛出
   public static Throwable unwrapThrowable(Throwable wrapped) {
     Throwable unwrapped = wrapped;
     while (true) {

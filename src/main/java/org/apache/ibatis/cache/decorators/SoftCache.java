@@ -23,46 +23,51 @@ import java.util.LinkedList;
 import org.apache.ibatis.cache.Cache;
 
 /**
+ * 软引用缓存
  * Soft Reference cache decorator
  * Thanks to Dr. Heinz Kabutz for his guidance here.
  *
  * @author Clinton Begin
  */
 public class SoftCache implements Cache {
+  //强引用的对象避免垃圾回收
   private final Deque<Object> hardLinksToAvoidGarbageCollection;
+  //垃圾回收的实体队列
   private final ReferenceQueue<Object> queueOfGarbageCollectedEntries;
+  //缓存
   private final Cache delegate;
+  //强引用的数量
   private int numberOfHardLinks;
-
+  //构造函数，默认256强引用
   public SoftCache(Cache delegate) {
     this.delegate = delegate;
     this.numberOfHardLinks = 256;
     this.hardLinksToAvoidGarbageCollection = new LinkedList<>();
     this.queueOfGarbageCollectedEntries = new ReferenceQueue<>();
   }
-
+  //获取ID
   @Override
   public String getId() {
     return delegate.getId();
   }
-
+  //获取大小，移除垃圾回收的item
   @Override
   public int getSize() {
     removeGarbageCollectedItems();
     return delegate.getSize();
   }
 
-
+  //设置大小
   public void setSize(int size) {
     this.numberOfHardLinks = size;
   }
-
+  //存放缓存，移除垃圾回收的item
   @Override
   public void putObject(Object key, Object value) {
     removeGarbageCollectedItems();
     delegate.putObject(key, new SoftEntry(key, value, queueOfGarbageCollectedEntries));
   }
-
+  //获取对象，移除没有引用的
   @Override
   public Object getObject(Object key) {
     Object result = null;
@@ -84,13 +89,13 @@ public class SoftCache implements Cache {
     }
     return result;
   }
-
+  //移除对象，移除垃圾回收的对象
   @Override
   public Object removeObject(Object key) {
     removeGarbageCollectedItems();
     return delegate.removeObject(key);
   }
-
+  //清空缓存
   @Override
   public void clear() {
     synchronized (hardLinksToAvoidGarbageCollection) {
@@ -99,14 +104,14 @@ public class SoftCache implements Cache {
     removeGarbageCollectedItems();
     delegate.clear();
   }
-
+  //移除垃圾回收的item
   private void removeGarbageCollectedItems() {
     SoftEntry sv;
     while ((sv = (SoftEntry) queueOfGarbageCollectedEntries.poll()) != null) {
       delegate.removeObject(sv.key);
     }
   }
-
+  //软引用实体对象
   private static class SoftEntry extends SoftReference<Object> {
     private final Object key;
 

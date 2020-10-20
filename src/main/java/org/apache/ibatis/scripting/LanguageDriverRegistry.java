@@ -19,14 +19,15 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * 语言驱动注册类
  * @author Frank D. Martinez [mnesarco]
  */
 public class LanguageDriverRegistry {
-
+  //语言驱动集合
   private final Map<Class<? extends LanguageDriver>, LanguageDriver> LANGUAGE_DRIVER_MAP = new HashMap<>();
-
+  //默认的驱动类
   private Class<? extends LanguageDriver> defaultDriverClass;
-
+  //注册语言驱动类
   public void register(Class<? extends LanguageDriver> cls) {
     if (cls == null) {
       throw new IllegalArgumentException("null is not a valid Language Driver");
@@ -39,7 +40,7 @@ public class LanguageDriverRegistry {
       }
     });
   }
-
+  //注册语言驱动实例
   public void register(LanguageDriver instance) {
     if (instance == null) {
       throw new IllegalArgumentException("null is not a valid Language Driver");
@@ -49,19 +50,19 @@ public class LanguageDriverRegistry {
       LANGUAGE_DRIVER_MAP.put(cls, instance);
     }
   }
-
+  //获取语言驱动实例
   public LanguageDriver getDriver(Class<? extends LanguageDriver> cls) {
     return LANGUAGE_DRIVER_MAP.get(cls);
   }
-
+  //获取默认驱动类
   public LanguageDriver getDefaultDriver() {
     return getDriver(getDefaultDriverClass());
   }
-
+  //获取默认的驱动类
   public Class<? extends LanguageDriver> getDefaultDriverClass() {
     return defaultDriverClass;
   }
-
+  //设置默认的驱动类
   public void setDefaultDriverClass(Class<? extends LanguageDriver> defaultDriverClass) {
     register(defaultDriverClass);
     this.defaultDriverClass = defaultDriverClass;

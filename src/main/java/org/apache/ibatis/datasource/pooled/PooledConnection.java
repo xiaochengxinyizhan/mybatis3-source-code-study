@@ -24,24 +24,35 @@ import java.sql.SQLException;
 import org.apache.ibatis.reflection.ExceptionUtil;
 
 /**
+ * 池化的链接
  * @author Clinton Begin
  */
 class PooledConnection implements InvocationHandler {
-
+  //关闭
   private static final String CLOSE = "close";
+  //是否ACES ？
   private static final Class<?>[] IFACES = new Class<?>[] { Connection.class };
-
+  //hashcode值
   private final int hashCode;
+  //数据源
   private final PooledDataSource dataSource;
+  //实际链接
   private final Connection realConnection;
+  //代理链接
   private final Connection proxyConnection;
+  //释放切换时间
   private long checkoutTimestamp;
+  //创建时间
   private long createdTimestamp;
+  //上次使用时间
   private long lastUsedTimestamp;
+  //链接类型code
   private int connectionTypeCode;
+  //是否有效
   private boolean valid;
 
   /**
+   * 使用入参链接和池化的数据源构造
    * Constructor for SimplePooledConnection that uses the Connection and PooledDataSource passed in.
    *
    * @param connection - the connection that is to be presented as a pooled connection
@@ -58,6 +69,7 @@ class PooledConnection implements InvocationHandler {
   }
 
   /**
+   * 使链接无效
    * Invalidates the connection.
    */
   public void invalidate() {
@@ -65,6 +77,7 @@ class PooledConnection implements InvocationHandler {
   }
 
   /**
+   * 检查链接是否还有用，有效，并且实际链接不为空，数据源可以ping通
    * Method to see if the connection is usable.
    *
    * @return True if the connection is usable
@@ -74,6 +87,7 @@ class PooledConnection implements InvocationHandler {
   }
 
   /**
+   * 获取真实的链接
    * Getter for the *real* connection that this wraps.
    *
    * @return The connection
@@ -83,6 +97,7 @@ class PooledConnection implements InvocationHandler {
   }
 
   /**
+   * 获取链接的代理
    * Getter for the proxy for the connection.
    *
    * @return The proxy
@@ -92,6 +107,7 @@ class PooledConnection implements InvocationHandler {
   }
 
   /**
+   * 获取真实链接的hashCode ，如果为null则为0
    * Gets the hashcode of the real connection (or 0 if it is null).
    *
    * @return The hashcode of the real connection (or 0 if it is null)
@@ -101,6 +117,7 @@ class PooledConnection implements InvocationHandler {
   }
 
   /**
+   * 获取链接的类型
    * Getter for the connection type (based on url + user + password).
    *
    * @return The connection type
@@ -110,6 +127,7 @@ class PooledConnection implements InvocationHandler {
   }
 
   /**
+   * 设置链接类型
    * Setter for the connection type.
    *
    * @param connectionTypeCode - the connection type
@@ -119,6 +137,7 @@ class PooledConnection implements InvocationHandler {
   }
 
   /**
+   * 获取链接的创建时间
    * Getter for the time that the connection was created.
    *
    * @return The creation timestamp
@@ -128,6 +147,7 @@ class PooledConnection implements InvocationHandler {
   }
 
   /**
+   * 设置链接的创建时间
    * Setter for the time that the connection was created.
    *
    * @param createdTimestamp - the timestamp
@@ -137,6 +157,7 @@ class PooledConnection implements InvocationHandler {
   }
 
   /**
+   * 获取链接上次使用的时间
    * Getter for the time that the connection was last used.
    *
    * @return - the timestamp
@@ -146,6 +167,7 @@ class PooledConnection implements InvocationHandler {
   }
 
   /**
+   * 设置链接上次使用的时间
    * Setter for the time that the connection was last used.
    *
    * @param lastUsedTimestamp - the timestamp
@@ -155,6 +177,7 @@ class PooledConnection implements InvocationHandler {
   }
 
   /**
+   * 获取该链接自从上次使用到现在的时间
    * Getter for the time since this connection was last used.
    *
    * @return - the time since the last use
@@ -164,6 +187,7 @@ class PooledConnection implements InvocationHandler {
   }
 
   /**
+   * 获取链接的年龄
    * Getter for the age of the connection.
    *
    * @return the age
@@ -173,6 +197,7 @@ class PooledConnection implements InvocationHandler {
   }
 
   /**
+   * 获取链接被切换的时间
    * Getter for the timestamp that this connection was checked out.
    *
    * @return the timestamp
@@ -182,6 +207,7 @@ class PooledConnection implements InvocationHandler {
   }
 
   /**
+   * 设置链接被切换的时间
    * Setter for the timestamp that this connection was checked out.
    *
    * @param timestamp the timestamp
@@ -191,6 +217,7 @@ class PooledConnection implements InvocationHandler {
   }
 
   /**
+   * 获取链接已经切换的时间
    * Getter for the time that this connection has been checked out.
    *
    * @return the time
@@ -205,6 +232,7 @@ class PooledConnection implements InvocationHandler {
   }
 
   /**
+   * 两个链接之间的比较
    * Allows comparing this connection to another.
    *
    * @param obj - the other connection to test for equality
@@ -222,6 +250,7 @@ class PooledConnection implements InvocationHandler {
   }
 
   /**
+   * InvocationHandler的实现类
    * Required for InvocationHandler implementation.
    *
    * @param proxy  - not used
@@ -232,23 +261,27 @@ class PooledConnection implements InvocationHandler {
   @Override
   public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
     String methodName = method.getName();
+    //如果是关闭
     if (CLOSE.equals(methodName)) {
+      //推送给链接
       dataSource.pushConnection(this);
       return null;
     }
     try {
+      //如果类与声明的不一致跑出异常
       if (!Object.class.equals(method.getDeclaringClass())) {
         // issue #579 toString() should never fail
         // throw an SQLException instead of a Runtime
         checkConnection();
       }
+      //执行链接
       return method.invoke(realConnection, args);
     } catch (Throwable t) {
       throw ExceptionUtil.unwrapThrowable(t);
     }
 
   }
-
+  //检查链接是否有效
   private void checkConnection() throws SQLException {
     if (!valid) {
       throw new SQLException("Error accessing PooledConnection. Connection is invalid.");

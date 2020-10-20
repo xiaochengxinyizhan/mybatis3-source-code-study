@@ -27,6 +27,7 @@ import org.apache.ibatis.type.TypeHandler;
 import org.apache.ibatis.type.UnknownTypeHandler;
 
 /**
+ * 指定属性的映射定义注解
  * The annotation that specify a mapping definition for the property.
  *
  * @see Results
@@ -38,6 +39,7 @@ import org.apache.ibatis.type.UnknownTypeHandler;
 @Repeatable(Results.class)
 public @interface Result {
   /**
+   * 返回是否ID列或者不是
    * Returns whether id column or not.
    *
    * @return {@code true} if id column; {@code false} if otherwise
@@ -45,6 +47,7 @@ public @interface Result {
   boolean id() default false;
 
   /**
+   * 返回映射到这个参数的列名
    * Return the column name(or column label) to map to this argument.
    *
    * @return the column name(or column label)
@@ -52,6 +55,7 @@ public @interface Result {
   String column() default "";
 
   /**
+   * 返回使用这个映射的属性名字
    * Returns the property name for applying this mapping.
    *
    * @return the property name
@@ -59,6 +63,7 @@ public @interface Result {
   String property() default "";
 
   /**
+   * 返回参数的Java类型
    * Return the java type for this argument.
    *
    * @return the java type
@@ -66,6 +71,7 @@ public @interface Result {
   Class<?> javaType() default void.class;
 
   /**
+   * 返回映射到这个参数的列的jdbc类型
    * Return the jdbc type for column that map to this argument.
    *
    * @return the jdbc type
@@ -73,6 +79,7 @@ public @interface Result {
   JdbcType jdbcType() default JdbcType.UNDEFINED;
 
   /**
+   * 返回检索一个列值从结果集的类型处理器
    * Returns the {@link TypeHandler} type for retrieving a column value from result set.
    *
    * @return the {@link TypeHandler} type
@@ -80,6 +87,7 @@ public @interface Result {
   Class<? extends TypeHandler> typeHandler() default UnknownTypeHandler.class;
 
   /**
+   * 返回单个关系的映射定义
    * Returns the mapping definition for single relationship.
    *
    * @return the mapping definition for single relationship
@@ -87,6 +95,7 @@ public @interface Result {
   One one() default @One;
 
   /**
+   * 返回集合关系的映射定义
    * Returns the mapping definition for collection relationship.
    *
    * @return the mapping definition for collection relationship

@@ -22,8 +22,9 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * 引用缓存的注解
  * The annotation that reference a cache.
- *
+ * 如果你使用这个注解，应该通过{@link #value()}或者{@link #name()}属性指定。
  * <p>If you use this annotation, should be specified either {@link #value()} or {@link #name()} attribute.
  *
  * <p><br>
@@ -43,6 +44,7 @@ import java.lang.annotation.Target;
 public @interface CacheNamespaceRef {
 
   /**
+   * 返回引用缓存的命名空间类型（这个命名空间变成指定类型的名字）
    * Returns the namespace type to reference a cache (the namespace name become a FQCN of specified type).
    *
    * @return the namespace type to reference a cache
@@ -50,6 +52,7 @@ public @interface CacheNamespaceRef {
   Class<?> value() default void.class;
 
   /**
+   * 返回引用缓存的命名空间
    * Returns the namespace name to reference a cache.
    *
    * @return the namespace name

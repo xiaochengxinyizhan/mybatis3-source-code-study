@@ -18,6 +18,7 @@ package org.apache.ibatis.executor.loader;
 import java.io.ObjectStreamException;
 
 /**
+ * 写入取代接口
  * @author Eduardo Macarron
  */
 public interface WriteReplaceInterface {

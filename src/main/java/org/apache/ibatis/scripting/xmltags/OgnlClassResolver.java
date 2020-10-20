@@ -19,6 +19,7 @@ import ognl.DefaultClassResolver;
 import org.apache.ibatis.io.Resources;
 
 /**
+ * 定制的 {@code ClassResolver} 行为比较像{@code DefaultClassResolver}。但是使用{@code Resources}工具类找寻目标类而不是{@code Class#forName(String)}.
  * Custom ognl {@code ClassResolver} which behaves same like ognl's
  * {@code DefaultClassResolver}. But uses the {@code Resources}
  * utility class to find the target class instead of {@code Class#forName(String)}.

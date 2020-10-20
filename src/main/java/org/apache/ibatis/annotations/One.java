@@ -23,6 +23,7 @@ import java.lang.annotation.Target;
 import org.apache.ibatis.mapping.FetchType;
 
 /**
+ * 指定检索单个对象的嵌套会话的注解
  * The annotation that specify the nested statement for retrieving single object.
  *
  * @see Result
@@ -34,6 +35,7 @@ import org.apache.ibatis.mapping.FetchType;
 @Target({})
 public @interface One {
   /**
+   * 返回检索单个对象的会话ID
    * Returns the statement id that retrieves single object.
    *
    * @return the statement id
@@ -41,6 +43,7 @@ public @interface One {
   String select() default "";
 
   /**
+   * 返回嵌套会话的拉取策略
    * Returns the fetch strategy for nested statement.
    *
    * @return the fetch strategy

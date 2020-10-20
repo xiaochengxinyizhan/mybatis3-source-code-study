@@ -24,6 +24,8 @@ import ognl.MemberAccess;
 import org.apache.ibatis.reflection.Reflector;
 
 /**
+ * MemberAccess类基于<a href=
+ *  * 'https://github.com/jkuhnert/ognl/blob/OGNL_3_2_1/src/java/ognl/DefaultMemberAccess.java'>DefaultMemberAccess</a>.
  * The {@link MemberAccess} class that based on <a href=
  * 'https://github.com/jkuhnert/ognl/blob/OGNL_3_2_1/src/java/ognl/DefaultMemberAccess.java'>DefaultMemberAccess</a>.
  *
@@ -35,13 +37,13 @@ import org.apache.ibatis.reflection.Reflector;
  * @see <a href='https://github.com/jkuhnert/ognl/issues/47'>#47 of ognl</a>
  */
 class OgnlMemberAccess implements MemberAccess {
-
+   //是否可控制访问
   private final boolean canControlMemberAccessible;
-
+   //构造函数
   OgnlMemberAccess() {
     this.canControlMemberAccessible = Reflector.canControlMemberAccessible();
   }
-
+  //设置属性是否可访问
   @Override
   public Object setup(Map context, Object target, Member member, String propertyName) {
     Object result = null;
@@ -54,7 +56,7 @@ class OgnlMemberAccess implements MemberAccess {
     }
     return result;
   }
-
+  //重新设置
   @Override
   public void restore(Map context, Object target, Member member, String propertyName,
       Object state) {
@@ -62,7 +64,7 @@ class OgnlMemberAccess implements MemberAccess {
       ((AccessibleObject) member).setAccessible((Boolean) state);
     }
   }
-
+  //是否可访问
   @Override
   public boolean isAccessible(Map context, Object target, Member member, String propertyName) {
     return canControlMemberAccessible;

@@ -36,23 +36,31 @@ import java.util.Map;
 import org.apache.ibatis.reflection.factory.ObjectFactory;
 
 /**
+ * 抽象序列化状态持有器
  * @author Eduardo Macarron
  * @author Franta Mejta
  */
 public abstract class AbstractSerialStateHolder implements Externalizable {
 
   private static final long serialVersionUID = 8940388717901644661L;
+  //对象输出流
   private static final ThreadLocal<ObjectOutputStream> stream = new ThreadLocal<>();
+  //用户bean字节
   private byte[] userBeanBytes = new byte[0];
+  //用户bean
   private Object userBean;
+  //未加载属性
   private Map<String, ResultLoaderMap.LoadPair> unloadedProperties;
+  //对象工厂
   private ObjectFactory objectFactory;
+  //构造器参数类型
   private Class<?>[] constructorArgTypes;
+  //构造器参数
   private Object[] constructorArgs;
-
+  //抽象序列化状态空构造函数
   public AbstractSerialStateHolder() {
   }
-
+  //抽象序列化状态构造函数
   public AbstractSerialStateHolder(
           final Object userBean,
           final Map<String, ResultLoaderMap.LoadPair> unloadedProperties,
@@ -65,18 +73,21 @@ public abstract class AbstractSerialStateHolder implements Externalizable {
     this.constructorArgTypes = constructorArgTypes.toArray(new Class<?>[0]);
     this.constructorArgs = constructorArgs.toArray(new Object[0]);
   }
-
+  //写到外面
   @Override
   public final void writeExternal(final ObjectOutput out) throws IOException {
     boolean firstRound = false;
+    //字节数组输出流
     final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+    //获取流信息
     ObjectOutputStream os = stream.get();
+    //如果流为空，则设置流信息
     if (os == null) {
       os = new ObjectOutputStream(baos);
       firstRound = true;
       stream.set(os);
     }
-
+    //输出流设置内容
     os.writeObject(this.userBean);
     os.writeObject(this.unloadedProperties);
     os.writeObject(this.objectFactory);
@@ -85,29 +96,31 @@ public abstract class AbstractSerialStateHolder implements Externalizable {
 
     final byte[] bytes = baos.toByteArray();
     out.writeObject(bytes);
-
+    //如果第一次 流移除
     if (firstRound) {
       stream.remove();
     }
   }
-
+  //读取外部输入流
   @Override
   public final void readExternal(final ObjectInput in) throws IOException, ClassNotFoundException {
     final Object data = in.readObject();
+    //设置用户bean信息
     if (data.getClass().isArray()) {
       this.userBeanBytes = (byte[]) data;
     } else {
       this.userBean = data;
     }
   }
-
+  //读取解析
   @SuppressWarnings("unchecked")
   protected final Object readResolve() throws ObjectStreamException {
+    //第二次运行
     /* Second run */
     if (this.userBean != null && this.userBeanBytes.length == 0) {
       return this.userBean;
     }
-
+    //第一次运行
     /* First run */
     try (ObjectInputStream in = new LookAheadObjectInputStream(new ByteArrayInputStream(this.userBeanBytes))) {
       this.userBean = in.readObject();
@@ -124,14 +137,15 @@ public abstract class AbstractSerialStateHolder implements Externalizable {
     final Map<String, ResultLoaderMap.LoadPair> arrayProps = new HashMap<>(this.unloadedProperties);
     final List<Class<?>> arrayTypes = Arrays.asList(this.constructorArgTypes);
     final List<Object> arrayValues = Arrays.asList(this.constructorArgs);
-
+    //创建反序列化代理
     return this.createDeserializationProxy(userBean, arrayProps, objectFactory, arrayTypes, arrayValues);
   }
-
+  //创建反序列化代理
   protected abstract Object createDeserializationProxy(Object target, Map<String, ResultLoaderMap.LoadPair> unloadedProperties, ObjectFactory objectFactory,
           List<Class<?>> constructorArgTypes, List<Object> constructorArgs);
-
+  //规划输入流
   private static class LookAheadObjectInputStream extends ObjectInputStream {
+    //黑名单
     private static final List<String> blacklist = Arrays.asList(
         "org.apache.commons.beanutils.BeanComparator",
         "org.apache.commons.collections.functors.InvokerTransformer",
@@ -143,11 +157,11 @@ public abstract class AbstractSerialStateHolder implements Externalizable {
         "org.springframework.beans.factory.ObjectFactory",
         "org.springframework.transaction.jta.JtaTransactionManager",
         "com.sun.org.apache.xalan.internal.xsltc.trax.TemplatesImpl");
-
+    //构造函数
     public LookAheadObjectInputStream(InputStream in) throws IOException {
       super(in);
     }
-
+    //解析类，对于黑名单的类则抛出异常
     @Override
     protected Class<?> resolveClass(ObjectStreamClass desc) throws IOException, ClassNotFoundException {
       String className = desc.getName();

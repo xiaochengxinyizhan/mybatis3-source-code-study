@@ -16,8 +16,10 @@
 package org.apache.ibatis.mapping;
 
 /**
+ * 拉取类型
  * @author Eduardo Macarron
  */
 public enum FetchType {
+  //延迟，渴望，默认
   LAZY, EAGER, DEFAULT
 }

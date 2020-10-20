@@ -24,6 +24,7 @@ import java.lang.annotation.Target;
 import org.apache.ibatis.mapping.StatementType;
 
 /**
+ * 指定检索key值的SQL注解
  * The annotation that specify an SQL for retrieving a key value.
  *
  * <p><br>
@@ -42,6 +43,7 @@ import org.apache.ibatis.mapping.StatementType;
 @Target(ElementType.METHOD)
 public @interface SelectKey {
   /**
+   * 返回检索key值的SQL
    * Returns an SQL for retrieving a key value.
    *
    * @return an SQL for retrieving a key value
@@ -49,6 +51,7 @@ public @interface SelectKey {
   String[] statement();
 
   /**
+   * 返回持有key值的属性名字
    * Returns property names that holds a key value.
    * <p>
    * If you specify multiple property, please separate using comma(',').
@@ -59,6 +62,7 @@ public @interface SelectKey {
   String keyProperty();
 
   /**
+   * 返回检索key值的列名字
    * Returns column names that retrieves a key value.
    * <p>
    * If you specify multiple column, please separate using comma(',').
@@ -69,6 +73,7 @@ public @interface SelectKey {
   String keyColumn() default "";
 
   /**
+   * 返回是否检索一个key值在之前插入或者更新会话前
    * Returns whether retrieves a key value before executing insert/update statement.
    *
    * @return {@code true} if execute before; {@code false} if otherwise
@@ -76,6 +81,7 @@ public @interface SelectKey {
   boolean before();
 
   /**
+   * 返回key值类型
    * Returns the key value type.
    *
    * @return the key value type
@@ -83,6 +89,7 @@ public @interface SelectKey {
   Class<?> resultType();
 
   /**
+   * 返回使用的会话类型
    * Returns the statement type to use.
    *
    * @return the statement type

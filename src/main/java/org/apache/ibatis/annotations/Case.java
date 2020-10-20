@@ -21,6 +21,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * 这个注解是 类型鉴别器的条件映射定义
  * The annotation that conditional mapping definition for {@link TypeDiscriminator}.
  *
  * @see TypeDiscriminator
@@ -36,6 +37,7 @@ import java.lang.annotation.Target;
 public @interface Case {
 
   /**
+   * 返回应用这个映射的条件值
    * Return the condition value to apply this mapping.
    *
    * @return the condition value
@@ -43,6 +45,7 @@ public @interface Case {
   String value();
 
   /**
+   * 返回使用这个映射创建对象的对象类型
    * Return the object type that create a object using this mapping.
    *
    * @return the object type
@@ -50,6 +53,7 @@ public @interface Case {
   Class<?> type();
 
   /**
+   * 返回属性的映射定义
    * Return mapping definitions for property.
    *
    * @return mapping definitions for property
@@ -57,6 +61,7 @@ public @interface Case {
   Result[] results() default {};
 
   /**
+   * 返回构造器的映射定义
    * Return mapping definitions for constructor.
    *
    * @return mapping definitions for constructor

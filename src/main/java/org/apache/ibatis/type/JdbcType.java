@@ -20,10 +20,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * jdbc枚举类型
  * @author Clinton Begin
  */
 public enum JdbcType {
   /*
+  添加该类型是能够基础支持数组数据类型--但是定制的类型处理器依然是必须要的
    * This is added to enable basic support for the
    * ARRAY data type - but a custom type handler is still required
    */
@@ -70,6 +72,7 @@ public enum JdbcType {
   TIMESTAMP_WITH_TIMEZONE(Types.TIMESTAMP_WITH_TIMEZONE); // JDBC 4.2 JDK8
 
   public final int TYPE_CODE;
+  //利用hashmap作为本地缓存，这点值得借鉴
   private static Map<Integer,JdbcType> codeLookup = new HashMap<>();
 
   static {

@@ -16,19 +16,23 @@
 package org.apache.ibatis.scripting.xmltags;
 
 /**
+ * ifSQL节点
  * @author Clinton Begin
  */
 public class IfSqlNode implements SqlNode {
+  //正则校验
   private final ExpressionEvaluator evaluator;
+  //test节点
   private final String test;
+  //内容
   private final SqlNode contents;
-
+   //构造函数
   public IfSqlNode(SqlNode contents, String test) {
     this.test = test;
     this.contents = contents;
     this.evaluator = new ExpressionEvaluator();
   }
-
+  //应用校验是否条件通过
   @Override
   public boolean apply(DynamicContext context) {
     if (evaluator.evaluateBoolean(test, context.getBindings())) {

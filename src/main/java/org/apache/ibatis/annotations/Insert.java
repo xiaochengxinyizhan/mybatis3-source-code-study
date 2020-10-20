@@ -22,6 +22,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * 指定一个插入记录的SQL注解
  * The annotation that specify an SQL for inserting record(s).
  *
  * <p><br>
@@ -39,6 +40,7 @@ import java.lang.annotation.Target;
 @Target(ElementType.METHOD)
 public @interface Insert {
   /**
+   * 返回插入记录的SQL
    * Returns an SQL for inserting record(s).
    *
    * @return an SQL for inserting record(s)

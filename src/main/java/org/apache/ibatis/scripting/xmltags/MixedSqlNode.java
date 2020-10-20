@@ -18,15 +18,17 @@ package org.apache.ibatis.scripting.xmltags;
 import java.util.List;
 
 /**
+ * 混合的SQL节点
  * @author Clinton Begin
  */
 public class MixedSqlNode implements SqlNode {
+  //内容
   private final List<SqlNode> contents;
-
+  //构造函数
   public MixedSqlNode(List<SqlNode> contents) {
     this.contents = contents;
   }
-
+  //循环遍历应用节点的上下文追加
   @Override
   public boolean apply(DynamicContext context) {
     contents.forEach(node -> node.apply(context));

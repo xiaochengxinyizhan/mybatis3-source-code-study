@@ -29,58 +29,66 @@ import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.type.JdbcType;
 
 /**
+ * SQL源构建器
  * @author Clinton Begin
  */
 public class SqlSourceBuilder extends BaseBuilder {
-
+  //参数属性
   private static final String PARAMETER_PROPERTIES = "javaType,jdbcType,mode,numericScale,resultMap,typeHandler,jdbcTypeName";
-
+  //构造函数
   public SqlSourceBuilder(Configuration configuration) {
     super(configuration);
   }
-
+  //解析源SQL
   public SqlSource parse(String originalSql, Class<?> parameterType, Map<String, Object> additionalParameters) {
     ParameterMappingTokenHandler handler = new ParameterMappingTokenHandler(configuration, parameterType, additionalParameters);
     GenericTokenParser parser = new GenericTokenParser("#{", "}", handler);
     String sql = parser.parse(originalSql);
     return new StaticSqlSource(configuration, sql, handler.getParameterMappings());
   }
-
+  //参数映射token处理器
   private static class ParameterMappingTokenHandler extends BaseBuilder implements TokenHandler {
-
+    //参数映射集合
     private List<ParameterMapping> parameterMappings = new ArrayList<>();
+    //参数类型
     private Class<?> parameterType;
+    //元参数
     private MetaObject metaParameters;
-
+    //构造函数
     public ParameterMappingTokenHandler(Configuration configuration, Class<?> parameterType, Map<String, Object> additionalParameters) {
       super(configuration);
       this.parameterType = parameterType;
       this.metaParameters = configuration.newMetaObject(additionalParameters);
     }
-
+    //获取参数映射
     public List<ParameterMapping> getParameterMappings() {
       return parameterMappings;
     }
-
+    //处理token
     @Override
     public String handleToken(String content) {
       parameterMappings.add(buildParameterMapping(content));
       return "?";
     }
-
+    //构建参数映射
     private ParameterMapping buildParameterMapping(String content) {
       Map<String, String> propertiesMap = parseParameterMapping(content);
       String property = propertiesMap.get("property");
       Class<?> propertyType;
+      //属性有get方法
       if (metaParameters.hasGetter(property)) { // issue #448 get type from additional params
         propertyType = metaParameters.getGetterType(property);
+        //属性有类型处理器
       } else if (typeHandlerRegistry.hasTypeHandler(parameterType)) {
         propertyType = parameterType;
+        //jdbc类型的游标集
       } else if (JdbcType.CURSOR.name().equals(propertiesMap.get("jdbcType"))) {
         propertyType = java.sql.ResultSet.class;
+        //参数类型为map
       } else if (property == null || Map.class.isAssignableFrom(parameterType)) {
         propertyType = Object.class;
       } else {
+        //获取元类
         MetaClass metaClass = MetaClass.forClass(parameterType, configuration.getReflectorFactory());
         if (metaClass.hasGetter(property)) {
           propertyType = metaClass.getGetterType(property);
@@ -88,9 +96,11 @@ public class SqlSourceBuilder extends BaseBuilder {
           propertyType = Object.class;
         }
       }
+      //参数映射构建器
       ParameterMapping.Builder builder = new ParameterMapping.Builder(configuration, property, propertyType);
       Class<?> javaType = propertyType;
       String typeHandlerAlias = null;
+      //属性遍历参数
       for (Map.Entry<String, String> entry : propertiesMap.entrySet()) {
         String name = entry.getKey();
         String value = entry.getValue();
@@ -122,7 +132,7 @@ public class SqlSourceBuilder extends BaseBuilder {
       }
       return builder.build();
     }
-
+    //解析参数映射
     private Map<String, String> parseParameterMapping(String content) {
       try {
         return new ParameterExpression(content);

@@ -26,24 +26,27 @@ import java.nio.charset.Charset;
 import java.util.Properties;
 
 /**
+ * 通过类加载器简单访问资源的类
  * A class to simplify access to resources through the classloader.
  *
  * @author Clinton Begin
  */
 public class Resources {
-
+  //类加载器包装器
   private static ClassLoaderWrapper classLoaderWrapper = new ClassLoaderWrapper();
 
   /**
+   * 字符集当调用getResourceAsReader，空意味使用了系统默认的
    * Charset to use when calling getResourceAsReader.
    * null means use the system default.
    */
   private static Charset charset;
-
+ //构造函数
   Resources() {
   }
 
   /**
+   * //返回默认的类加载器
    * Returns the default classloader (may be null).
    *
    * @return The default classloader
@@ -53,6 +56,7 @@ public class Resources {
   }
 
   /**
+   * 设置默认的类加载器
    * Sets the default classloader
    *
    * @param defaultClassLoader - the new default ClassLoader
@@ -62,6 +66,7 @@ public class Resources {
   }
 
   /**
+   *返回类路径上的资源的URL
    * Returns the URL of the resource on the classpath
    *
    * @param resource The resource to find
@@ -74,6 +79,7 @@ public class Resources {
   }
 
   /**
+   * 返回类路径上资源的URL
    * Returns the URL of the resource on the classpath
    *
    * @param loader   The classloader used to fetch the resource
@@ -90,6 +96,7 @@ public class Resources {
   }
 
   /**
+   * 返回类路径上的资源作为流对象
    * Returns a resource on the classpath as a Stream object
    *
    * @param resource The resource to find
@@ -101,6 +108,7 @@ public class Resources {
   }
 
   /**
+   * 返回类路径上的资源作为流对象
    * Returns a resource on the classpath as a Stream object
    *
    * @param loader   The classloader used to fetch the resource
@@ -117,6 +125,7 @@ public class Resources {
   }
 
   /**
+   * 返回类路径上的资源作为属性对象
    * Returns a resource on the classpath as a Properties object
    *
    * @param resource The resource to find
@@ -132,6 +141,7 @@ public class Resources {
   }
 
   /**
+   * 返回类路径上的资源作为属性对象
    * Returns a resource on the classpath as a Properties object
    *
    * @param loader   The classloader used to fetch the resource
@@ -148,6 +158,7 @@ public class Resources {
   }
 
   /**
+   * 返回类路径上的资源作为Reader对象
    * Returns a resource on the classpath as a Reader object
    *
    * @param resource The resource to find
@@ -165,6 +176,7 @@ public class Resources {
   }
 
   /**
+   * 返回类路径的资源作为Reader对象
    * Returns a resource on the classpath as a Reader object
    *
    * @param loader   The classloader used to fetch the resource
@@ -183,6 +195,7 @@ public class Resources {
   }
 
   /**
+   * 返回类路径的资源作为文件对象
    * Returns a resource on the classpath as a File object
    *
    * @param resource The resource to find
@@ -194,6 +207,7 @@ public class Resources {
   }
 
   /**
+   * 返回类路径的资源作为文件对象
    * Returns a resource on the classpath as a File object
    *
    * @param loader   - the classloader used to fetch the resource
@@ -206,6 +220,7 @@ public class Resources {
   }
 
   /**
+   * 获取URL作为输入流
    * Gets a URL as an input stream
    *
    * @param urlString - the URL to get
@@ -219,6 +234,7 @@ public class Resources {
   }
 
   /**
+   * 获取URL作为Reader流
    * Gets a URL as a Reader
    *
    * @param urlString - the URL to get
@@ -236,6 +252,7 @@ public class Resources {
   }
 
   /**
+   * 获取URL作为属性对象
    * Gets a URL as a Properties object
    *
    * @param urlString - the URL to get
@@ -251,6 +268,7 @@ public class Resources {
   }
 
   /**
+   * 加载类
    * Loads a class
    *
    * @param className - the class to fetch
@@ -260,11 +278,11 @@ public class Resources {
   public static Class<?> classForName(String className) throws ClassNotFoundException {
     return classLoaderWrapper.classForName(className);
   }
-
+  //获取字符集
   public static Charset getCharset() {
     return charset;
   }
-
+  //设置字符集
   public static void setCharset(Charset charset) {
     Resources.charset = charset;
   }

@@ -21,21 +21,24 @@ import org.apache.ibatis.reflection.wrapper.DefaultObjectWrapperFactory;
 import org.apache.ibatis.reflection.wrapper.ObjectWrapperFactory;
 
 /**
+ * 系统元对象
  * @author Clinton Begin
  */
 public final class SystemMetaObject {
-
+   //默认的对象工厂
   public static final ObjectFactory DEFAULT_OBJECT_FACTORY = new DefaultObjectFactory();
+  //默认的对象包装器工厂
   public static final ObjectWrapperFactory DEFAULT_OBJECT_WRAPPER_FACTORY = new DefaultObjectWrapperFactory();
+  //空元对象
   public static final MetaObject NULL_META_OBJECT = MetaObject.forObject(NullObject.class, DEFAULT_OBJECT_FACTORY, DEFAULT_OBJECT_WRAPPER_FACTORY, new DefaultReflectorFactory());
-
+  //防止实例化
   private SystemMetaObject() {
     // Prevent Instantiation of Static Class
   }
-
+  //静态内部类空对象
   private static class NullObject {
   }
-
+  //根据对象获取元对象
   public static MetaObject forObject(Object object) {
     return MetaObject.forObject(object, DEFAULT_OBJECT_FACTORY, DEFAULT_OBJECT_WRAPPER_FACTORY, new DefaultReflectorFactory());
   }

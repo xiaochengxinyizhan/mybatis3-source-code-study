@@ -22,6 +22,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * 这个注解 执行一个刷新会话代理Mapper接口
  * The maker annotation that invoke a flush statements via Mapper interface.
  *
  * <p><br>

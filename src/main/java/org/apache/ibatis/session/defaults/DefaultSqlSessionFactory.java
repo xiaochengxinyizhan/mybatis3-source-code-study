@@ -32,61 +32,62 @@ import org.apache.ibatis.transaction.TransactionFactory;
 import org.apache.ibatis.transaction.managed.ManagedTransactionFactory;
 
 /**
+ * 默认的会话工厂
  * @author Clinton Begin
  */
 public class DefaultSqlSessionFactory implements SqlSessionFactory {
-
+  //全局配置
   private final Configuration configuration;
-
+  //构造函数
   public DefaultSqlSessionFactory(Configuration configuration) {
     this.configuration = configuration;
   }
-
+  //打开会话从数据源
   @Override
   public SqlSession openSession() {
     return openSessionFromDataSource(configuration.getDefaultExecutorType(), null, false);
   }
-
+  //打开从数据源是否自动提交的会话
   @Override
   public SqlSession openSession(boolean autoCommit) {
     return openSessionFromDataSource(configuration.getDefaultExecutorType(), null, autoCommit);
   }
-
+  //打开执行类型的会话
   @Override
   public SqlSession openSession(ExecutorType execType) {
     return openSessionFromDataSource(execType, null, false);
   }
-
+  //打开事务隔离级别的会话
   @Override
   public SqlSession openSession(TransactionIsolationLevel level) {
     return openSessionFromDataSource(configuration.getDefaultExecutorType(), level, false);
   }
-
+  //打开执行类型和事务隔离级别的会话
   @Override
   public SqlSession openSession(ExecutorType execType, TransactionIsolationLevel level) {
     return openSessionFromDataSource(execType, level, false);
   }
-
+  //打开执行类型和是否自动提交的会话
   @Override
   public SqlSession openSession(ExecutorType execType, boolean autoCommit) {
     return openSessionFromDataSource(execType, null, autoCommit);
   }
-
+ //打开链接的会话
   @Override
   public SqlSession openSession(Connection connection) {
     return openSessionFromConnection(configuration.getDefaultExecutorType(), connection);
   }
-
+  //打开执行类型起和链接的会话
   @Override
   public SqlSession openSession(ExecutorType execType, Connection connection) {
     return openSessionFromConnection(execType, connection);
   }
-
+  //获取全局配置
   @Override
   public Configuration getConfiguration() {
     return configuration;
   }
-
+  //打开从数据源的会话
   private SqlSession openSessionFromDataSource(ExecutorType execType, TransactionIsolationLevel level, boolean autoCommit) {
     Transaction tx = null;
     try {
@@ -102,7 +103,7 @@ public class DefaultSqlSessionFactory implements SqlSessionFactory {
       ErrorContext.instance().reset();
     }
   }
-
+  //打开从链接的会话
   private SqlSession openSessionFromConnection(ExecutorType execType, Connection connection) {
     try {
       boolean autoCommit;
@@ -124,14 +125,14 @@ public class DefaultSqlSessionFactory implements SqlSessionFactory {
       ErrorContext.instance().reset();
     }
   }
-
+  //获取事务工厂
   private TransactionFactory getTransactionFactoryFromEnvironment(Environment environment) {
     if (environment == null || environment.getTransactionFactory() == null) {
       return new ManagedTransactionFactory();
     }
     return environment.getTransactionFactory();
   }
-
+  //关闭事务
   private void closeTransaction(Transaction tx) {
     if (tx != null) {
       try {

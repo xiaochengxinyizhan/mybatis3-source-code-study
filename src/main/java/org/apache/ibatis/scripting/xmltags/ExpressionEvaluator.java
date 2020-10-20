@@ -24,10 +24,11 @@ import java.util.Map;
 import org.apache.ibatis.builder.BuilderException;
 
 /**
+ * 正则校验器
  * @author Clinton Begin
  */
 public class ExpressionEvaluator {
-
+  //校验是否一致
   public boolean evaluateBoolean(String expression, Object parameterObject) {
     Object value = OgnlCache.getValue(expression, parameterObject);
     if (value instanceof Boolean) {
@@ -38,7 +39,7 @@ public class ExpressionEvaluator {
     }
     return value != null;
   }
-
+  //校验是否是迭代器
   public Iterable<?> evaluateIterable(String expression, Object parameterObject) {
     Object value = OgnlCache.getValue(expression, parameterObject);
     if (value == null) {

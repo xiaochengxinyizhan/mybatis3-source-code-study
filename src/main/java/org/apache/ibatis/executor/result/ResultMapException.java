@@ -18,22 +18,23 @@ package org.apache.ibatis.executor.result;
 import org.apache.ibatis.exceptions.PersistenceException;
 
 /**
+ * 结果集映射异常
  * @author Ryan Lamore
  */
 public class ResultMapException extends PersistenceException {
   private static final long serialVersionUID = 3270932060569707623L;
-
+  //空构造函数
   public ResultMapException() {
   }
-
+  //传递信息构造函数
   public ResultMapException(String message) {
     super(message);
   }
-
+  //传递信息和throwable构造函数
   public ResultMapException(String message, Throwable cause) {
     super(message, cause);
   }
-
+  //结果映射异常
   public ResultMapException(Throwable cause) {
     super(cause);
   }

@@ -18,51 +18,52 @@ package org.apache.ibatis.cache.decorators;
 import org.apache.ibatis.cache.Cache;
 
 /**
+ * 同步缓存
  * @author Clinton Begin
  */
 public class SynchronizedCache implements Cache {
-
+  //缓存
   private final Cache delegate;
-
+  //构造函数
   public SynchronizedCache(Cache delegate) {
     this.delegate = delegate;
   }
-
+  //获取ID
   @Override
   public String getId() {
     return delegate.getId();
   }
-
+  //获取大小
   @Override
   public synchronized int getSize() {
     return delegate.getSize();
   }
-
+  //存放对象
   @Override
   public synchronized void putObject(Object key, Object object) {
     delegate.putObject(key, object);
   }
-
+  //获取对象
   @Override
   public synchronized Object getObject(Object key) {
     return delegate.getObject(key);
   }
-
+  //移除对象
   @Override
   public synchronized Object removeObject(Object key) {
     return delegate.removeObject(key);
   }
-
+  //清空缓存
   @Override
   public synchronized void clear() {
     delegate.clear();
   }
-
+  //hash值
   @Override
   public int hashCode() {
     return delegate.hashCode();
   }
-
+  //对象是否一致
   @Override
   public boolean equals(Object obj) {
     return delegate.equals(obj);

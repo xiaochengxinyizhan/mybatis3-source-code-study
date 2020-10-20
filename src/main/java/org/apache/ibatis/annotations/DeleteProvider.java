@@ -22,6 +22,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * 指定一个提供删除记录的SQL方法的注解
  * The annotation that specify a method that provide an SQL for deleting record(s).
  *
  * <p><br>
@@ -48,6 +49,7 @@ import java.lang.annotation.Target;
 public @interface DeleteProvider {
 
   /**
+   * 指定实现SQL服务方法的类型
    * Specify a type that implements an SQL provider method.
    *
    * @return a type that implements an SQL provider method
@@ -57,6 +59,7 @@ public @interface DeleteProvider {
   Class<?> value() default void.class;
 
   /**
+   * 指定实现SQL服务方法的类型
    * Specify a type that implements an SQL provider method.
    * <p>
    * This attribute is alias of {@link #value()}.
@@ -67,6 +70,7 @@ public @interface DeleteProvider {
   Class<?> type() default void.class;
 
   /**
+   * 指定一个提供SQL的方法
    * Specify a method for providing an SQL.
    *
    * <p>

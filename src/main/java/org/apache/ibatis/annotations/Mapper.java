@@ -23,6 +23,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * MyBatis mappers的接口
  * Marker interface for MyBatis mappers.
  *
  * <p><br>

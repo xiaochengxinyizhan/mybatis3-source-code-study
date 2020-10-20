@@ -23,25 +23,29 @@ import org.apache.ibatis.reflection.ReflectionException;
 import org.apache.ibatis.reflection.property.PropertyTokenizer;
 
 /**
+ * 抽象类基础包装器
  * @author Clinton Begin
  */
 public abstract class BaseWrapper implements ObjectWrapper {
-
+  //无参数
   protected static final Object[] NO_ARGUMENTS = new Object[0];
+  //元对象
   protected final MetaObject metaObject;
-
+  //基础构造器
   protected BaseWrapper(MetaObject metaObject) {
     this.metaObject = metaObject;
   }
-
+  //解析集合
   protected Object resolveCollection(PropertyTokenizer prop, Object object) {
+    //如果属性标记器没有名称返回该对象
     if ("".equals(prop.getName())) {
       return object;
     } else {
+      //否则返回该属性对应的值
       return metaObject.getValue(prop.getName());
     }
   }
-
+  //获取集合值，根据属性标记器和集合，支持map,list,array
   protected Object getCollectionValue(PropertyTokenizer prop, Object collection) {
     if (collection instanceof Map) {
       return ((Map) collection).get(prop.getIndex());
@@ -72,7 +76,7 @@ public abstract class BaseWrapper implements ObjectWrapper {
       }
     }
   }
-
+  //设置集合值支持map,list,array
   protected void setCollectionValue(PropertyTokenizer prop, Object collection, Object value) {
     if (collection instanceof Map) {
       ((Map) collection).put(prop.getIndex(), value);

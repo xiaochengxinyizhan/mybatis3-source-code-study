@@ -18,24 +18,25 @@ package org.apache.ibatis.logging;
 import org.apache.ibatis.exceptions.PersistenceException;
 
 /**
+ * 继承运行期异常
  * @author Clinton Begin
  */
 public class LogException extends PersistenceException {
 
   private static final long serialVersionUID = 1022924004852350942L;
-
+  //空构造函数
   public LogException() {
     super();
   }
-
+  //传递信息的构造函数
   public LogException(String message) {
     super(message);
   }
-
+ //传递信息和throwable的构造函数
   public LogException(String message, Throwable cause) {
     super(message, cause);
   }
-
+  //传递throwable的构造函数
   public LogException(Throwable cause) {
     super(cause);
   }

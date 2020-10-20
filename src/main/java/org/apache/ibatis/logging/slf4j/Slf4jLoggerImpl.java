@@ -19,46 +19,47 @@ import org.apache.ibatis.logging.Log;
 import org.slf4j.Logger;
 
 /**
+ * 日志实现类
  * @author Eduardo Macarron
  */
 class Slf4jLoggerImpl implements Log {
-
+   //slf4j.Logger
   private final Logger log;
-
+  //日志实现类构造器
   public Slf4jLoggerImpl(Logger logger) {
     log = logger;
   }
-
+  //是否开启debug
   @Override
   public boolean isDebugEnabled() {
     return log.isDebugEnabled();
   }
-
+  //是否开启trace
   @Override
   public boolean isTraceEnabled() {
     return log.isTraceEnabled();
   }
-
+  //是否输出错误信息
   @Override
   public void error(String s, Throwable e) {
     log.error(s, e);
   }
-
+  //输出错误信息
   @Override
   public void error(String s) {
     log.error(s);
   }
-
+  //输出debug信息
   @Override
   public void debug(String s) {
     log.debug(s);
   }
-
+  //输出trace信息
   @Override
   public void trace(String s) {
     log.trace(s);
   }
-
+  //输出warn信息
   @Override
   public void warn(String s) {
     log.warn(s);

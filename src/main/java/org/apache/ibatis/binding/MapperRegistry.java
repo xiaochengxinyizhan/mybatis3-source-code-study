@@ -27,19 +27,21 @@ import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.SqlSession;
 
 /**
+ * mapper注册器
  * @author Clinton Begin
  * @author Eduardo Macarron
  * @author Lasse Voss
  */
 public class MapperRegistry {
-
+  //全局配置
   private final Configuration config;
+  //已知的mapper代理工厂
   private final Map<Class<?>, MapperProxyFactory<?>> knownMappers = new HashMap<>();
-
+  //构造函数
   public MapperRegistry(Configuration config) {
     this.config = config;
   }
-
+  //获取mapper根据类型
   @SuppressWarnings("unchecked")
   public <T> T getMapper(Class<T> type, SqlSession sqlSession) {
     final MapperProxyFactory<T> mapperProxyFactory = (MapperProxyFactory<T>) knownMappers.get(type);
@@ -52,11 +54,11 @@ public class MapperRegistry {
       throw new BindingException("Error getting mapper instance. Cause: " + e, e);
     }
   }
-
+  //是否有该mapper
   public <T> boolean hasMapper(Class<T> type) {
     return knownMappers.containsKey(type);
   }
-
+  //添加mapper
   public <T> void addMapper(Class<T> type) {
     if (type.isInterface()) {
       if (hasMapper(type)) {
@@ -80,6 +82,7 @@ public class MapperRegistry {
   }
 
   /**
+   * 获取只读mapper结合
    * @since 3.2.2
    */
   public Collection<Class<?>> getMappers() {
@@ -87,6 +90,7 @@ public class MapperRegistry {
   }
 
   /**
+   * 添加mapper根据包名和超类
    * @since 3.2.2
    */
   public void addMappers(String packageName, Class<?> superType) {
@@ -99,6 +103,7 @@ public class MapperRegistry {
   }
 
   /**
+   * 添加mapper根据包名
    * @since 3.2.2
    */
   public void addMappers(String packageName) {

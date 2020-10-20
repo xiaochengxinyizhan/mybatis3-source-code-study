@@ -22,6 +22,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * 分组属性映射定义的注解
  * The annotation that be grouping mapping definitions for property.
  *
  * <p><br>
@@ -45,6 +46,7 @@ import java.lang.annotation.Target;
 @Target(ElementType.METHOD)
 public @interface Results {
   /**
+   * 返回结果集的ID
    * Returns the id of this result map.
    *
    * @return the id of this result map
@@ -52,6 +54,7 @@ public @interface Results {
   String id() default "";
 
   /**
+   * 返回属性映射定义
    * Returns mapping definitions for property.
    *
    * @return mapping definitions

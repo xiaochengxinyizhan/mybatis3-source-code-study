@@ -21,18 +21,20 @@ import org.apache.ibatis.mapping.SqlSource;
 import org.apache.ibatis.session.Configuration;
 
 /**
+ * 动态SQL源
  * @author Clinton Begin
  */
 public class DynamicSqlSource implements SqlSource {
-
+  //全局配置
   private final Configuration configuration;
+  //root节点
   private final SqlNode rootSqlNode;
-
+  //动态sql源
   public DynamicSqlSource(Configuration configuration, SqlNode rootSqlNode) {
     this.configuration = configuration;
     this.rootSqlNode = rootSqlNode;
   }
-
+   //获取绑定的SQL
   @Override
   public BoundSql getBoundSql(Object parameterObject) {
     DynamicContext context = new DynamicContext(configuration, parameterObject);

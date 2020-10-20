@@ -18,17 +18,20 @@ package org.apache.ibatis.scripting.xmltags;
 import java.util.List;
 
 /**
+ * If的sql节点
  * @author Clinton Begin
  */
 public class ChooseSqlNode implements SqlNode {
+  //sql节点
   private final SqlNode defaultSqlNode;
+  //If的sql节点
   private final List<SqlNode> ifSqlNodes;
-
+  //选择sql节点
   public ChooseSqlNode(List<SqlNode> ifSqlNodes, SqlNode defaultSqlNode) {
     this.ifSqlNodes = ifSqlNodes;
     this.defaultSqlNode = defaultSqlNode;
   }
-
+  //是否应用在动态上下文中
   @Override
   public boolean apply(DynamicContext context) {
     for (SqlNode sqlNode : ifSqlNodes) {

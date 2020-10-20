@@ -22,6 +22,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * 指定参数名字的注解
  * The annotation that specify the parameter name.
  *
  * <p><br>
@@ -39,6 +40,7 @@ import java.lang.annotation.Target;
 @Target(ElementType.PARAMETER)
 public @interface Param {
   /**
+   * 返回参数的名字
    * Returns the parameter name.
    *
    * @return the parameter name

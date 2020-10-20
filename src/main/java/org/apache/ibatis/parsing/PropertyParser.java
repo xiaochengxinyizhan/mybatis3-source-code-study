@@ -18,6 +18,7 @@ package org.apache.ibatis.parsing;
 import java.util.Properties;
 
 /**
+ * 属性解析器
  * @author Clinton Begin
  * @author Kazuki Shimizu
  */
@@ -25,6 +26,7 @@ public class PropertyParser {
 
   private static final String KEY_PREFIX = "org.apache.ibatis.parsing.PropertyParser.";
   /**
+   * 特殊的属性key 暗示 是否开启默认的占位符
    * The special property key that indicate whether enable a default value on placeholder.
    * <p>
    *   The default value is {@code false} (indicate disable a default value on placeholder)
@@ -35,6 +37,7 @@ public class PropertyParser {
   public static final String KEY_ENABLE_DEFAULT_VALUE = KEY_PREFIX + "enable-default-value";
 
   /**
+   * 为占位符上的键和默认值指定分隔符的特殊属性键
    * The special property key that specify a separator for key and default value on placeholder.
    * <p>
    *   The default separator is {@code ":"}.
@@ -49,28 +52,28 @@ public class PropertyParser {
   private PropertyParser() {
     // Prevent Instantiation
   }
-
+  //解析属性变量
   public static String parse(String string, Properties variables) {
     VariableTokenHandler handler = new VariableTokenHandler(variables);
     GenericTokenParser parser = new GenericTokenParser("${", "}", handler);
     return parser.parse(string);
   }
-
+  //变量token处理器
   private static class VariableTokenHandler implements TokenHandler {
     private final Properties variables;
     private final boolean enableDefaultValue;
     private final String defaultValueSeparator;
-
+   //构造函数
     private VariableTokenHandler(Properties variables) {
       this.variables = variables;
       this.enableDefaultValue = Boolean.parseBoolean(getPropertyValue(KEY_ENABLE_DEFAULT_VALUE, ENABLE_DEFAULT_VALUE));
       this.defaultValueSeparator = getPropertyValue(KEY_DEFAULT_VALUE_SEPARATOR, DEFAULT_VALUE_SEPARATOR);
     }
-
+    //获取属性值
     private String getPropertyValue(String key, String defaultValue) {
       return (variables == null) ? defaultValue : variables.getProperty(key, defaultValue);
     }
-
+   //处理内容中的token
     @Override
     public String handleToken(String content) {
       if (variables != null) {

@@ -16,23 +16,24 @@
 package org.apache.ibatis.builder;
 
 /**
+ * 不完整的元素异常
  * @author Eduardo Macarron
  */
 public class IncompleteElementException extends BuilderException {
   private static final long serialVersionUID = -3697292286890900315L;
-
+  //空构造函数
   public IncompleteElementException() {
     super();
   }
-
+  //传递信息和throwable的构造函数
   public IncompleteElementException(String message, Throwable cause) {
     super(message, cause);
   }
-
+  //传递信息的构造函数
   public IncompleteElementException(String message) {
     super(message);
   }
-
+  //传递throwable的构造函数
   public IncompleteElementException(Throwable cause) {
     super(cause);
   }

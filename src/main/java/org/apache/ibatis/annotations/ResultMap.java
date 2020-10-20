@@ -22,6 +22,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * 指定使用的结果映射名字
  * The annotation that specify result map names to use.
  *
  * <p><br>
@@ -56,6 +57,7 @@ import java.lang.annotation.Target;
 @Target(ElementType.METHOD)
 public @interface ResultMap {
   /**
+   * 返回使用的结果映射名字
    * Returns result map names to use.
    *
    * @return result map names

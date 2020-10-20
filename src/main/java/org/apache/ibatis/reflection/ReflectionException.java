@@ -18,24 +18,25 @@ package org.apache.ibatis.reflection;
 import org.apache.ibatis.exceptions.PersistenceException;
 
 /**
+ * 反射异常与之前的一样，封装了底层的runtime异常
  * @author Clinton Begin
  */
 public class ReflectionException extends PersistenceException {
 
   private static final long serialVersionUID = 7642570221267566591L;
-
+  //空构造
   public ReflectionException() {
     super();
   }
-
+  //传递信息构造
   public ReflectionException(String message) {
     super(message);
   }
-
+  //传递信息和throwable构造
   public ReflectionException(String message, Throwable cause) {
     super(message, cause);
   }
-
+  //传递throwable构造
   public ReflectionException(Throwable cause) {
     super(cause);
   }

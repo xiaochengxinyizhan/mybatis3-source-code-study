@@ -26,25 +26,31 @@ import java.util.Set;
 import org.apache.ibatis.reflection.ExceptionUtil;
 
 /**
+ * 执行处理器
  * @author Clinton Begin
  */
 public class Plugin implements InvocationHandler {
-
+  //目标类
   private final Object target;
+  //拦截器
   private final Interceptor interceptor;
+  //方法的签名集合
   private final Map<Class<?>, Set<Method>> signatureMap;
-
+  //插件构造函数
   private Plugin(Object target, Interceptor interceptor, Map<Class<?>, Set<Method>> signatureMap) {
     this.target = target;
     this.interceptor = interceptor;
     this.signatureMap = signatureMap;
   }
-
+  //包装目标类和拦截器
   public static Object wrap(Object target, Interceptor interceptor) {
+    //获取拦截器的签名集合
     Map<Class<?>, Set<Method>> signatureMap = getSignatureMap(interceptor);
     Class<?> type = target.getClass();
+    //获取所有的该类型的接口
     Class<?>[] interfaces = getAllInterfaces(type, signatureMap);
     if (interfaces.length > 0) {
+      //代理执行插件和接口
       return Proxy.newProxyInstance(
           type.getClassLoader(),
           interfaces,
@@ -52,28 +58,33 @@ public class Plugin implements InvocationHandler {
     }
     return target;
   }
-
+  //执行代理方法
   @Override
   public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
     try {
+      //拦截器拦截该方法
       Set<Method> methods = signatureMap.get(method.getDeclaringClass());
       if (methods != null && methods.contains(method)) {
         return interceptor.intercept(new Invocation(target, method, args));
       }
+      //方法执行
       return method.invoke(target, args);
     } catch (Exception e) {
       throw ExceptionUtil.unwrapThrowable(e);
     }
   }
-
+  //获取签名的拦截器集合
   private static Map<Class<?>, Set<Method>> getSignatureMap(Interceptor interceptor) {
+    //注解拦截器
     Intercepts interceptsAnnotation = interceptor.getClass().getAnnotation(Intercepts.class);
     // issue #251
     if (interceptsAnnotation == null) {
       throw new PluginException("No @Intercepts annotation was found in interceptor " + interceptor.getClass().getName());
     }
+    //签名数组
     Signature[] sigs = interceptsAnnotation.value();
     Map<Class<?>, Set<Method>> signatureMap = new HashMap<>();
+    //编列签名
     for (Signature sig : sigs) {
       Set<Method> methods = signatureMap.computeIfAbsent(sig.type(), k -> new HashSet<>());
       try {
@@ -85,7 +96,7 @@ public class Plugin implements InvocationHandler {
     }
     return signatureMap;
   }
-
+  //获取所有接口类
   private static Class<?>[] getAllInterfaces(Class<?> type, Map<Class<?>, Set<Method>> signatureMap) {
     Set<Class<?>> interfaces = new HashSet<>();
     while (type != null) {

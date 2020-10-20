@@ -21,12 +21,13 @@ import java.util.List;
 import org.apache.ibatis.session.Configuration;
 
 /**
+ * where的SQL节点
  * @author Clinton Begin
  */
 public class WhereSqlNode extends TrimSqlNode {
-
+  //前缀集合
   private static List<String> prefixList = Arrays.asList("AND ","OR ","AND\n", "OR\n", "AND\r", "OR\r", "AND\t", "OR\t");
-
+  //全局配置，处理SQL节点内容
   public WhereSqlNode(Configuration configuration, SqlNode contents) {
     super(configuration, contents, "WHERE", prefixList, null, null);
   }

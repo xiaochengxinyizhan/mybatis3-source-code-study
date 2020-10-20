@@ -33,18 +33,22 @@ import org.apache.ibatis.type.TypeHandler;
 import org.apache.ibatis.type.TypeHandlerRegistry;
 
 /**
+ * 默认的参数处理器
  * @author Clinton Begin
  * @author Eduardo Macarron
  */
 public class DefaultParameterHandler implements ParameterHandler {
-
+  //类型处理器的注册器
   private final TypeHandlerRegistry typeHandlerRegistry;
-
+  //映射会话
   private final MappedStatement mappedStatement;
+  //参数对象
   private final Object parameterObject;
+  //绑定sql
   private final BoundSql boundSql;
+  //全局配置
   private final Configuration configuration;
-
+  //构造函数
   public DefaultParameterHandler(MappedStatement mappedStatement, Object parameterObject, BoundSql boundSql) {
     this.mappedStatement = mappedStatement;
     this.configuration = mappedStatement.getConfiguration();
@@ -52,37 +56,46 @@ public class DefaultParameterHandler implements ParameterHandler {
     this.parameterObject = parameterObject;
     this.boundSql = boundSql;
   }
-
+  //获取参数对象
   @Override
   public Object getParameterObject() {
     return parameterObject;
   }
-
+  //设置预会话参数
   @Override
   public void setParameters(PreparedStatement ps) {
+    //错误上下文设置会话的参数记录
     ErrorContext.instance().activity("setting parameters").object(mappedStatement.getParameterMap().getId());
+    //绑定的sql获取参数映射
     List<ParameterMapping> parameterMappings = boundSql.getParameterMappings();
+    //参数映射不为空
     if (parameterMappings != null) {
       for (int i = 0; i < parameterMappings.size(); i++) {
         ParameterMapping parameterMapping = parameterMappings.get(i);
+        //参数映射的参数风格不是出去
         if (parameterMapping.getMode() != ParameterMode.OUT) {
           Object value;
           String propertyName = parameterMapping.getProperty();
+          //判断绑定sql是否有附加的参数
           if (boundSql.hasAdditionalParameter(propertyName)) { // issue #448 ask first for additional params
             value = boundSql.getAdditionalParameter(propertyName);
           } else if (parameterObject == null) {
             value = null;
+            //类型处理器注册器是否有参数对象的类型处理器
           } else if (typeHandlerRegistry.hasTypeHandler(parameterObject.getClass())) {
             value = parameterObject;
           } else {
+            //获取属性的元对象
             MetaObject metaObject = configuration.newMetaObject(parameterObject);
             value = metaObject.getValue(propertyName);
           }
+          //类型处理器
           TypeHandler typeHandler = parameterMapping.getTypeHandler();
           JdbcType jdbcType = parameterMapping.getJdbcType();
           if (value == null && jdbcType == null) {
             jdbcType = configuration.getJdbcTypeForNull();
           }
+          //类型处理器给参数会话赋值
           try {
             typeHandler.setParameter(ps, i + 1, value, jdbcType);
           } catch (TypeException | SQLException e) {

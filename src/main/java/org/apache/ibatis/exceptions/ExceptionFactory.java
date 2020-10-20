@@ -18,15 +18,17 @@ package org.apache.ibatis.exceptions;
 import org.apache.ibatis.executor.ErrorContext;
 
 /**
+ * 异常工厂类
  * @author Clinton Begin
  */
 public class ExceptionFactory {
-
+  //防止空构造器实例化
   private ExceptionFactory() {
     // Prevent Instantiation
   }
-
+  //包装异常函数：将传递的信息，和异常进行封装并返回运行异常
   public static RuntimeException wrapException(String message, Exception e) {
+    //返回持久化异常并封装了具体传递的信息
     return new PersistenceException(ErrorContext.instance().message(message).cause(e).toString(), e);
   }
 

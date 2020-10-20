@@ -19,32 +19,35 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 /**
+ * 执行类
  * @author Clinton Begin
  */
 public class Invocation {
-
+  //目标类
   private final Object target;
+  //方法
   private final Method method;
+  //参数
   private final Object[] args;
-
+  //执行构造函数
   public Invocation(Object target, Method method, Object[] args) {
     this.target = target;
     this.method = method;
     this.args = args;
   }
-
+  //获取目标类
   public Object getTarget() {
     return target;
   }
-
+  //获取方法
   public Method getMethod() {
     return method;
   }
-
+  //获取参数
   public Object[] getArgs() {
     return args;
   }
-
+  //执行目标类和参数
   public Object proceed() throws InvocationTargetException, IllegalAccessException {
     return method.invoke(target, args);
   }

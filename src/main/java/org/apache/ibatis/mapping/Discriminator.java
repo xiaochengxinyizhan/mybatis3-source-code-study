@@ -21,24 +21,27 @@ import java.util.Map;
 import org.apache.ibatis.session.Configuration;
 
 /**
+ * 鉴别器
  * @author Clinton Begin
  */
 public class Discriminator {
-
+  //结果映射
   private ResultMapping resultMapping;
+  //鉴别器映射
   private Map<String, String> discriminatorMap;
-
+  //空构造器
   Discriminator() {
   }
-
+  //内部构建器
   public static class Builder {
+    //鉴别器
     private Discriminator discriminator = new Discriminator();
-
+     //构建鉴别器
     public Builder(Configuration configuration, ResultMapping resultMapping, Map<String, String> discriminatorMap) {
       discriminator.resultMapping = resultMapping;
       discriminator.discriminatorMap = discriminatorMap;
     }
-
+    //并设置鉴别器映射为不可修改的map
     public Discriminator build() {
       assert discriminator.resultMapping != null;
       assert discriminator.discriminatorMap != null;
@@ -48,15 +51,15 @@ public class Discriminator {
       return discriminator;
     }
   }
-
+  //获取结果映射
   public ResultMapping getResultMapping() {
     return resultMapping;
   }
-
+  //获取鉴别器映射
   public Map<String, String> getDiscriminatorMap() {
     return discriminatorMap;
   }
-
+  //根据key获取鉴别器的value
   public String getMapIdFor(String s) {
     return discriminatorMap.get(s);
   }

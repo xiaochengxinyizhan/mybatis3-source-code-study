@@ -16,25 +16,26 @@
 package org.apache.ibatis.exceptions;
 
 /**
+ * Deprecated废弃类
  * @author Clinton Begin
  */
 @Deprecated
 public class IbatisException extends RuntimeException {
 
   private static final long serialVersionUID = 3880206998166270511L;
-
+  //重载空构造函数
   public IbatisException() {
     super();
   }
-
+  //重载传递消息的构造函数
   public IbatisException(String message) {
     super(message);
   }
-
+  //重载传递消息和Throwable的构造函数
   public IbatisException(String message, Throwable cause) {
     super(message, cause);
   }
-
+  //重载传递Throwable的构造函数
   public IbatisException(Throwable cause) {
     super(cause);
   }

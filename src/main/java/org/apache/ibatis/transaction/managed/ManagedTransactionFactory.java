@@ -25,6 +25,7 @@ import org.apache.ibatis.transaction.Transaction;
 import org.apache.ibatis.transaction.TransactionFactory;
 
 /**
+ * 创建被管理事务实例
  * Creates {@link ManagedTransaction} instances.
  *
  * @author Clinton Begin
@@ -32,9 +33,9 @@ import org.apache.ibatis.transaction.TransactionFactory;
  * @see ManagedTransaction
  */
 public class ManagedTransactionFactory implements TransactionFactory {
-
+  //关闭链接，默认是true
   private boolean closeConnection = true;
-
+  //设置相关事务管理属性，如果没有传入属性，则默认关闭的。，否则根据传入的属性判断是否关闭
   @Override
   public void setProperties(Properties props) {
     if (props != null) {
@@ -44,12 +45,12 @@ public class ManagedTransactionFactory implements TransactionFactory {
       }
     }
   }
-
+  //根据链接初始化被管理的事务
   @Override
   public Transaction newTransaction(Connection conn) {
     return new ManagedTransaction(conn, closeConnection);
   }
-
+  //无提示的忽略自动提交和隔离级别，因为被管理事务完全被外部管理。目的是为了保证管理与被管理之间的可移植性
   @Override
   public Transaction newTransaction(DataSource ds, TransactionIsolationLevel level, boolean autoCommit) {
     // Silently ignores autocommit and isolation level, as managed transactions are entirely

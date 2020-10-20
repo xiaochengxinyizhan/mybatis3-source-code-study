@@ -22,16 +22,17 @@ import java.lang.reflect.Parameter;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
-
+//参数名字工具类
 public class ParamNameUtil {
+  //根据方法获取参数名字
   public static List<String> getParamNames(Method method) {
     return getParameterNames(method);
   }
-
+  //根据构造器获取参数名字
   public static List<String> getParamNames(Constructor<?> constructor) {
     return getParameterNames(constructor);
   }
-
+  //根据执行任务类获取参数名字
   private static List<String> getParameterNames(Executable executable) {
     return Arrays.stream(executable.getParameters()).map(Parameter::getName).collect(Collectors.toList());
   }

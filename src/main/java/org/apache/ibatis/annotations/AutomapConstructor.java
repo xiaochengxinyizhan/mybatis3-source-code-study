@@ -22,6 +22,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * 显示一个自动映射的构造器注解
  * The marker annotation that indicate a constructor for automatic mapping.
  *
  * <p><br>

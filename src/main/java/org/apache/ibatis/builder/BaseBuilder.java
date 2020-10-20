@@ -29,40 +29,44 @@ import org.apache.ibatis.type.TypeHandler;
 import org.apache.ibatis.type.TypeHandlerRegistry;
 
 /**
+ * 抽象构建器
  * @author Clinton Begin
  */
 public abstract class BaseBuilder {
+  //全局配置
   protected final Configuration configuration;
+  //类型别名注册器
   protected final TypeAliasRegistry typeAliasRegistry;
+  //类型处理器注册器
   protected final TypeHandlerRegistry typeHandlerRegistry;
-
+  //构造函数
   public BaseBuilder(Configuration configuration) {
     this.configuration = configuration;
     this.typeAliasRegistry = this.configuration.getTypeAliasRegistry();
     this.typeHandlerRegistry = this.configuration.getTypeHandlerRegistry();
   }
-
+  //获取全局配置
   public Configuration getConfiguration() {
     return configuration;
   }
-
+  //解析正则表达式
   protected Pattern parseExpression(String regex, String defaultValue) {
     return Pattern.compile(regex == null ? defaultValue : regex);
   }
-
+  //获取boolean值
   protected Boolean booleanValueOf(String value, Boolean defaultValue) {
     return value == null ? defaultValue : Boolean.valueOf(value);
   }
-
+  //获取int值
   protected Integer integerValueOf(String value, Integer defaultValue) {
     return value == null ? defaultValue : Integer.valueOf(value);
   }
-
+  //获取set值
   protected Set<String> stringSetValueOf(String value, String defaultValue) {
     value = value == null ? defaultValue : value;
     return new HashSet<>(Arrays.asList(value.split(",")));
   }
-
+  //解析jdbc类型
   protected JdbcType resolveJdbcType(String alias) {
     if (alias == null) {
       return null;
@@ -73,7 +77,7 @@ public abstract class BaseBuilder {
       throw new BuilderException("Error resolving JdbcType. Cause: " + e, e);
     }
   }
-
+  //解析结果集类型
   protected ResultSetType resolveResultSetType(String alias) {
     if (alias == null) {
       return null;
@@ -84,7 +88,7 @@ public abstract class BaseBuilder {
       throw new BuilderException("Error resolving ResultSetType. Cause: " + e, e);
     }
   }
-
+  //解析参数风格
   protected ParameterMode resolveParameterMode(String alias) {
     if (alias == null) {
       return null;
@@ -95,7 +99,7 @@ public abstract class BaseBuilder {
       throw new BuilderException("Error resolving ParameterMode. Cause: " + e, e);
     }
   }
-
+  //创建实例
   protected Object createInstance(String alias) {
     Class<?> clazz = resolveClass(alias);
     if (clazz == null) {
@@ -107,7 +111,7 @@ public abstract class BaseBuilder {
       throw new BuilderException("Error creating instance. Cause: " + e, e);
     }
   }
-
+  //根据别名解析类
   protected <T> Class<? extends T> resolveClass(String alias) {
     if (alias == null) {
       return null;
@@ -118,7 +122,7 @@ public abstract class BaseBuilder {
       throw new BuilderException("Error resolving class. Cause: " + e, e);
     }
   }
-
+  //解析类型处理器
   protected TypeHandler<?> resolveTypeHandler(Class<?> javaType, String typeHandlerAlias) {
     if (typeHandlerAlias == null) {
       return null;
@@ -131,7 +135,7 @@ public abstract class BaseBuilder {
     Class<? extends TypeHandler<?>> typeHandlerType = (Class<? extends TypeHandler<?>>) type;
     return resolveTypeHandler(javaType, typeHandlerType);
   }
-
+  //解析类型处理器
   protected TypeHandler<?> resolveTypeHandler(Class<?> javaType, Class<? extends TypeHandler<?>> typeHandlerType) {
     if (typeHandlerType == null) {
       return null;
@@ -144,7 +148,7 @@ public abstract class BaseBuilder {
     }
     return handler;
   }
-
+  //解析别名
   protected <T> Class<? extends T> resolveAlias(String alias) {
     return typeAliasRegistry.resolveAlias(alias);
   }

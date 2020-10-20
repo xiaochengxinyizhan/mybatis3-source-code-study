@@ -22,43 +22,44 @@ import org.apache.ibatis.cache.Cache;
 import org.apache.ibatis.cache.CacheException;
 
 /**
+ * 持久缓存
  * @author Clinton Begin
  */
 public class PerpetualCache implements Cache {
-
+  //id
   private final String id;
-
+  //缓存
   private final Map<Object, Object> cache = new HashMap<>();
-
+  //构造函数
   public PerpetualCache(String id) {
     this.id = id;
   }
-
+  //获取ID
   @Override
   public String getId() {
     return id;
   }
-
+  //获取大小
   @Override
   public int getSize() {
     return cache.size();
   }
-
+  //存放对象
   @Override
   public void putObject(Object key, Object value) {
     cache.put(key, value);
   }
-
+  //获取对象
   @Override
   public Object getObject(Object key) {
     return cache.get(key);
   }
-
+  //移除对象
   @Override
   public Object removeObject(Object key) {
     return cache.remove(key);
   }
-
+  //清空缓存
   @Override
   public void clear() {
     cache.clear();

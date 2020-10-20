@@ -18,40 +18,43 @@ package org.apache.ibatis.executor.result;
 import org.apache.ibatis.session.ResultContext;
 
 /**
+ * 默认结果上下文
  * @author Clinton Begin
  */
 public class DefaultResultContext<T> implements ResultContext<T> {
-
+  //结果对象
   private T resultObject;
+  //结果数量
   private int resultCount;
+  //是否被停止
   private boolean stopped;
-
+   //默认结果上下文
   public DefaultResultContext() {
     resultObject = null;
     resultCount = 0;
     stopped = false;
   }
-
+  //获取结果对象
   @Override
   public T getResultObject() {
     return resultObject;
   }
-
+  //获取结果数量
   @Override
   public int getResultCount() {
     return resultCount;
   }
-
+  //是否被停止
   @Override
   public boolean isStopped() {
     return stopped;
   }
-
+  //下一个结果对象
   public void nextResultObject(T resultObject) {
     resultCount++;
     this.resultObject = resultObject;
   }
-
+  //停止
   @Override
   public void stop() {
     this.stopped = true;

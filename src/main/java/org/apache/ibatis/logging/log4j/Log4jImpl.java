@@ -20,48 +20,49 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 /**
+ * log4j实现类
  * @author Eduardo Macarron
  */
 public class Log4jImpl implements Log {
 
   private static final String FQCN = Log4jImpl.class.getName();
-
+  //log4j.Logger
   private final Logger log;
-
+  //实现类
   public Log4jImpl(String clazz) {
     log = Logger.getLogger(clazz);
   }
-
+  //是否开启debug形式
   @Override
   public boolean isDebugEnabled() {
     return log.isDebugEnabled();
   }
-
+  //是否开启trace形式
   @Override
   public boolean isTraceEnabled() {
     return log.isTraceEnabled();
   }
-
+  //输出错误信息
   @Override
   public void error(String s, Throwable e) {
     log.log(FQCN, Level.ERROR, s, e);
   }
-
+  //输出错误信息
   @Override
   public void error(String s) {
     log.log(FQCN, Level.ERROR, s, null);
   }
-
+  //输出debug信息
   @Override
   public void debug(String s) {
     log.log(FQCN, Level.DEBUG, s, null);
   }
-
+  //输出trace信息
   @Override
   public void trace(String s) {
     log.log(FQCN, Level.TRACE, s, null);
   }
-
+  //输出warn信息
   @Override
   public void warn(String s) {
     log.log(FQCN, Level.WARN, s, null);

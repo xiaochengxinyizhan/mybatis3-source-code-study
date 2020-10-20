@@ -21,12 +21,13 @@ import java.util.List;
 import org.apache.ibatis.session.Configuration;
 
 /**
+ * set的SQL节点
  * @author Clinton Begin
  */
 public class SetSqlNode extends TrimSqlNode {
-
+ //根据逗号分割集合
   private static final List<String> COMMA = Collections.singletonList(",");
-
+ //全局配置 设置sql节点
   public SetSqlNode(Configuration configuration,SqlNode contents) {
     super(configuration, contents, "SET", COMMA, null, COMMA);
   }

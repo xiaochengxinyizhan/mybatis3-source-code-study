@@ -26,44 +26,60 @@ import org.apache.ibatis.type.TypeHandler;
 import org.apache.ibatis.type.TypeHandlerRegistry;
 
 /**
+ * 结果映射
  * @author Clinton Begin
  */
 public class ResultMapping {
-
+  //全局配置
   private Configuration configuration;
+  //属性
   private String property;
+  //列
   private String column;
+  //Java类型
   private Class<?> javaType;
+  //jdbc类型
   private JdbcType jdbcType;
+  //类型处理器
   private TypeHandler<?> typeHandler;
+  //嵌套结果映射ID
   private String nestedResultMapId;
+  //嵌套查询ID
   private String nestedQueryId;
+  //非空列
   private Set<String> notNullColumns;
+  //列前缀
   private String columnPrefix;
+  //结果标记
   private List<ResultFlag> flags;
+  //合成的结果集
   private List<ResultMapping> composites;
+  //结果集
   private String resultSet;
+  //外键
   private String foreignColumn;
+  //是否懒加载
   private boolean lazy;
 
   ResultMapping() {
   }
-
+  //内部类构建器
   public static class Builder {
+    //结果映射
     private ResultMapping resultMapping = new ResultMapping();
-
+    //构建器构造函数
     public Builder(Configuration configuration, String property, String column, TypeHandler<?> typeHandler) {
       this(configuration, property);
       resultMapping.column = column;
       resultMapping.typeHandler = typeHandler;
     }
-
+    //构建器构造函数
     public Builder(Configuration configuration, String property, String column, Class<?> javaType) {
       this(configuration, property);
       resultMapping.column = column;
       resultMapping.javaType = javaType;
     }
-
+    //构建器构造函数
     public Builder(Configuration configuration, String property) {
       resultMapping.configuration = configuration;
       resultMapping.property = property;
@@ -71,85 +87,90 @@ public class ResultMapping {
       resultMapping.composites = new ArrayList<>();
       resultMapping.lazy = configuration.isLazyLoadingEnabled();
     }
-
+    //Java类型
     public Builder javaType(Class<?> javaType) {
       resultMapping.javaType = javaType;
       return this;
     }
-
+    //jdbc类型
     public Builder jdbcType(JdbcType jdbcType) {
       resultMapping.jdbcType = jdbcType;
       return this;
     }
-
+   //嵌套结果映射ID
     public Builder nestedResultMapId(String nestedResultMapId) {
       resultMapping.nestedResultMapId = nestedResultMapId;
       return this;
     }
-
+    //嵌套查询ID
     public Builder nestedQueryId(String nestedQueryId) {
       resultMapping.nestedQueryId = nestedQueryId;
       return this;
     }
-
+    //结果集
     public Builder resultSet(String resultSet) {
       resultMapping.resultSet = resultSet;
       return this;
     }
-
+   //外键
     public Builder foreignColumn(String foreignColumn) {
       resultMapping.foreignColumn = foreignColumn;
       return this;
     }
-
+   //非空列
     public Builder notNullColumns(Set<String> notNullColumns) {
       resultMapping.notNullColumns = notNullColumns;
       return this;
     }
-
+   //列前缀
     public Builder columnPrefix(String columnPrefix) {
       resultMapping.columnPrefix = columnPrefix;
       return this;
     }
-
+   //标记
     public Builder flags(List<ResultFlag> flags) {
       resultMapping.flags = flags;
       return this;
     }
-
+   //类型处理器
     public Builder typeHandler(TypeHandler<?> typeHandler) {
       resultMapping.typeHandler = typeHandler;
       return this;
     }
-
+   //混合的结果集
     public Builder composites(List<ResultMapping> composites) {
       resultMapping.composites = composites;
       return this;
     }
-
+   //是否懒加载
     public Builder lazy(boolean lazy) {
       resultMapping.lazy = lazy;
       return this;
     }
-
+   //构建器构建
     public ResultMapping build() {
       // lock down collections
       resultMapping.flags = Collections.unmodifiableList(resultMapping.flags);
       resultMapping.composites = Collections.unmodifiableList(resultMapping.composites);
+      //解析类型处理器
       resolveTypeHandler();
+      //校验
       validate();
       return resultMapping;
     }
-
+ //解决了一些bug校验
     private void validate() {
+      //不能同时定义嵌套查询ID和嵌套结果ID
       // Issue #697: cannot define both nestedQueryId and nestedResultMapId
       if (resultMapping.nestedQueryId != null && resultMapping.nestedResultMapId != null) {
         throw new IllegalStateException("Cannot define both nestedQueryId and nestedResultMapId in property " + resultMapping.property);
       }
+      //没有类型处理器的映射
       // Issue #5: there should be no mappings without typehandler
       if (resultMapping.nestedQueryId == null && resultMapping.nestedResultMapId == null && resultMapping.typeHandler == null) {
         throw new IllegalStateException("No typehandler found for property " + resultMapping.property);
       }
+      //列仅在嵌套的resultmaps中是可选的，但在其余的resultmaps中不是
       // Issue #4 and GH #39: column is optional only in nested resultmaps but not in the rest
       if (resultMapping.nestedResultMapId == null && resultMapping.column == null && resultMapping.composites.isEmpty()) {
         throw new IllegalStateException("Mapping is missing column attribute for property " + resultMapping.property);
@@ -168,7 +189,7 @@ public class ResultMapping {
         }
       }
     }
-
+    //解析类型处理器
     private void resolveTypeHandler() {
       if (resultMapping.typeHandler == null && resultMapping.javaType != null) {
         Configuration configuration = resultMapping.configuration;
@@ -176,12 +197,13 @@ public class ResultMapping {
         resultMapping.typeHandler = typeHandlerRegistry.getTypeHandler(resultMapping.javaType, resultMapping.jdbcType);
       }
     }
-
+   //列字段构建
     public Builder column(String column) {
       resultMapping.column = column;
       return this;
     }
   }
+  //只提供查询get方法
 
   public String getProperty() {
     return property;

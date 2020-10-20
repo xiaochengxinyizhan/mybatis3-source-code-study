@@ -26,27 +26,30 @@ import org.apache.ibatis.executor.ErrorContext;
 import org.apache.ibatis.session.defaults.DefaultSqlSessionFactory;
 
 /**
+ * 构建{@link SqlSession}实例
  * Builds {@link SqlSession} instances.
  *
  * @author Clinton Begin
  */
 public class SqlSessionFactoryBuilder {
-
+  //根据字符流构建会话工厂
   public SqlSessionFactory build(Reader reader) {
     return build(reader, null, null);
   }
-
+  //根据字符流和环境构建会话工厂
   public SqlSessionFactory build(Reader reader, String environment) {
     return build(reader, environment, null);
   }
-
+  //根据字符流和属性构建会话工厂
   public SqlSessionFactory build(Reader reader, Properties properties) {
     return build(reader, null, properties);
   }
-
+  //根据字符流和环境和属性构建会话工厂
   public SqlSessionFactory build(Reader reader, String environment, Properties properties) {
     try {
+      //利用xml配置构建器专门解析MyBatis的配置文件
       XMLConfigBuilder parser = new XMLConfigBuilder(reader, environment, properties);
+      //调用重载函数，build入参数为parser.parse()解析后的configuration对象
       return build(parser.parse());
     } catch (Exception e) {
       throw ExceptionFactory.wrapException("Error building SqlSession.", e);
@@ -59,21 +62,22 @@ public class SqlSessionFactoryBuilder {
       }
     }
   }
-
+  //根据字节流构建会话工厂
   public SqlSessionFactory build(InputStream inputStream) {
     return build(inputStream, null, null);
   }
-
+  //根据字节流和环境构建会话工厂
   public SqlSessionFactory build(InputStream inputStream, String environment) {
     return build(inputStream, environment, null);
   }
-
+  //根据字节流和属性文件构建会话工厂
   public SqlSessionFactory build(InputStream inputStream, Properties properties) {
     return build(inputStream, null, properties);
   }
-
+  //构建会话工厂
   public SqlSessionFactory build(InputStream inputStream, String environment, Properties properties) {
     try {
+      //解析字节流和环境和属性文件
       XMLConfigBuilder parser = new XMLConfigBuilder(inputStream, environment, properties);
       return build(parser.parse());
     } catch (Exception e) {
@@ -87,7 +91,7 @@ public class SqlSessionFactoryBuilder {
       }
     }
   }
-
+  //根据全局配置构建会话工厂，走默认的会话工厂
   public SqlSessionFactory build(Configuration config) {
     return new DefaultSqlSessionFactory(config);
   }

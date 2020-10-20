@@ -27,21 +27,25 @@ import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.session.Configuration;
 
 /**
+ * 动态上下文
  * @author Clinton Begin
  */
 public class DynamicContext {
-
+  //参数key
   public static final String PARAMETER_OBJECT_KEY = "_parameter";
+  //数据库id key
   public static final String DATABASE_ID_KEY = "_databaseId";
-
+  //Ognl运行器设置属性可访问
   static {
     OgnlRuntime.setPropertyAccessor(ContextMap.class, new ContextAccessor());
   }
-
+  //绑定的上下文
   private final ContextMap bindings;
+  //数组拼接器
   private final StringJoiner sqlBuilder = new StringJoiner(" ");
+  //唯一的数值
   private int uniqueNumber = 0;
-
+  //构造函数
   public DynamicContext(Configuration configuration, Object parameterObject) {
     if (parameterObject != null && !(parameterObject instanceof Map)) {
       MetaObject metaObject = configuration.newMetaObject(parameterObject);
@@ -53,37 +57,39 @@ public class DynamicContext {
     bindings.put(PARAMETER_OBJECT_KEY, parameterObject);
     bindings.put(DATABASE_ID_KEY, configuration.getDatabaseId());
   }
-
+  //获取绑定的集合
   public Map<String, Object> getBindings() {
     return bindings;
   }
-
+  //绑定名字和值
   public void bind(String name, Object value) {
     bindings.put(name, value);
   }
-
+//追加SQL
   public void appendSql(String sql) {
     sqlBuilder.add(sql);
   }
-
+  //获取SQL
   public String getSql() {
     return sqlBuilder.toString().trim();
   }
-
+  //获取唯一的数值
   public int getUniqueNumber() {
     return uniqueNumber++;
   }
-
+  //上下文集合
   static class ContextMap extends HashMap<String, Object> {
     private static final long serialVersionUID = 2977601501966151582L;
+    //参数元对象
     private final MetaObject parameterMetaObject;
+    //回滚参数对象
     private final boolean fallbackParameterObject;
-
+   //构造函数
     public ContextMap(MetaObject parameterMetaObject, boolean fallbackParameterObject) {
       this.parameterMetaObject = parameterMetaObject;
       this.fallbackParameterObject = fallbackParameterObject;
     }
-
+    //获取key对应的参数值
     @Override
     public Object get(Object key) {
       String strKey = (String) key;
@@ -103,9 +109,9 @@ public class DynamicContext {
       }
     }
   }
-
+  //上下文访问
   static class ContextAccessor implements PropertyAccessor {
-
+    //从上下文获取属性对象
     @Override
     public Object getProperty(Map context, Object target, Object name) {
       Map map = (Map) target;
@@ -122,18 +128,18 @@ public class DynamicContext {
 
       return null;
     }
-
+   //设置属性
     @Override
     public void setProperty(Map context, Object target, Object name, Object value) {
       Map<Object, Object> map = (Map<Object, Object>) target;
       map.put(name, value);
     }
-
+   //获取源访问
     @Override
     public String getSourceAccessor(OgnlContext arg0, Object arg1, Object arg2) {
       return null;
     }
-
+    //获取源set方法
     @Override
     public String getSourceSetter(OgnlContext arg0, Object arg1, Object arg2) {
       return null;
